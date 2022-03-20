@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -24,13 +26,15 @@ import javax.swing.SwingUtilities;
  * Three modes: show English, show French, both
  */
 
-public class VocabFrame extends JFrame {
+public class VocabFrame extends JFrame implements WindowListener {
 
     private static final int PADDING = 16;
 
     private static final Color CORRECT_ANSWER_COLOR = new Color(0, 200, 0);
     private static final Color INCORRECT_ANSWER_COLOR = new Color(200, 0, 0);
     
+    private JFrame owner;
+
     private JLabel flashcardText;
     private JLabel answerLabel;
     private JTextField answerField;
@@ -60,6 +64,9 @@ public class VocabFrame extends JFrame {
     }
 
     public void createAndShow(JFrame owner) {
+        this.owner = owner;
+        addWindowListener(this);
+
         Box horizontalContainer = Box.createHorizontalBox();
         Box verticalContainer = Box.createVerticalBox();
 
@@ -179,6 +186,48 @@ public class VocabFrame extends JFrame {
         }
         answerLabel.setText("");
         answerField.setEnabled(true);
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        owner.setVisible(true);
+        // System.out.println("Window closing!");
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
