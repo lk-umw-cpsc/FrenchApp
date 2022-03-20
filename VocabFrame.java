@@ -131,7 +131,12 @@ public class VocabFrame extends JFrame {
 
     private void pullCard() {
         if (deck.isEmpty()) {
-            // fix this
+            if (incorrectDeck.isEmpty()) {
+                System.exit(0);
+            } else {
+                deck.addAll(incorrectDeck);
+                incorrectDeck.clear();
+            }
         } else {
             currentCard = deck.remove(deck.size() - 1);
         }
