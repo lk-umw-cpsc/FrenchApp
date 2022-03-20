@@ -1,7 +1,7 @@
 le continent : continent
 le pays : country
 l'Afrique du Nord : North Africa
-l’Afrique de l’Ouest : West Africa
+l'Afrique de l'Ouest : West Africa
 l'Allemagne : Germany
 l'Amérique du Nord : North America
 l'Amérique du Sud : South America

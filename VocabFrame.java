@@ -17,6 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+/**
+ * Ideas: 
+ * Gender hints (color of flash card text is either pink or blue)
+ * ^ these can be toggled
+ * Three modes: show English, show French, both
+ */
+
 public class VocabFrame extends JFrame {
 
     private static final int PADDING = 16;
@@ -48,9 +55,7 @@ public class VocabFrame extends JFrame {
                 deck.add(new FlashCard(words[1], words[0]));
             }
             Collections.shuffle(deck);
-        } catch (FileNotFoundException e) {
-
-        }
+        } catch (FileNotFoundException e) {}
     }
 
     public void createAndShow(JFrame owner) {
