@@ -48,7 +48,8 @@ public class VocabFrame extends JFrame {
         deck = new ArrayList<>();
         incorrectDeck = new ArrayList<>();
         try {
-            Scanner s = new Scanner(new File("vocab.txt"));
+            Scanner s = new Scanner(new File("pays.deck"));
+            String deckname = s.nextLine();
             while (s.hasNextLine()) {
                 String line = s.nextLine();
                 String[] words = line.split(" : ");
@@ -101,6 +102,7 @@ public class VocabFrame extends JFrame {
         answerField.addActionListener(this::answerSubmitted);
         answerField.setFont(new Font("Helvetica", 0, 24));
         answerField.setHorizontalAlignment(JTextField.CENTER);
+        
         verticalContainer.add(Box.createVerticalStrut(PADDING));
 
         add(horizontalContainer);
@@ -111,6 +113,16 @@ public class VocabFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Method called when the user pressed Enter/Return to submit
+     * their answer for the current flash card.
+     * 
+     * The correct answer is displayed below the flash card's text,
+     * in green if the input was correct, or red otherwise.
+     * 
+     * If incorrect, the card is added to the incorrect pile.
+     * @param e Event information passed by Swing event thread
+     */
     private void answerSubmitted(ActionEvent e) {
         String input = answerField.getText().strip();
 
@@ -134,6 +146,19 @@ public class VocabFrame extends JFrame {
         new Thread(this::updateCard).start();
     }
 
+    /**
+     * Waits 2.5 seconds, then picks a new card.
+     */
+    private void updateCard() {
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException e) {}
+        SwingUtilities.invokeLater(this::pullCard);
+    }
+
+    /**
+     * Chooses a new card and displays it.
+     */
     private void pullCard() {
         if (deck.isEmpty()) {
             if (incorrectDeck.isEmpty()) {
@@ -154,13 +179,6 @@ public class VocabFrame extends JFrame {
         }
         answerLabel.setText("");
         answerField.setEnabled(true);
-    }
-
-    private void updateCard() {
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException e) {}
-        SwingUtilities.invokeLater(this::pullCard);
     }
 
 }
