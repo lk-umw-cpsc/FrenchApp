@@ -1,0 +1,30 @@
+le continent : continent
+le pays : country
+l'Afrique du Nord : North Africa
+l’Afrique de l’Ouest : West Africa
+l'Allemagne : Germany
+l'Amérique du Nord : North America
+l'Amérique du Sud : South America
+l'Angleterre : England
+l'Asie : Asia
+la Belgique : Belgium
+le Brésil : Brazil
+le Canada : Canada
+la Chine : China
+la Côte d'Ivoire : Ivory Coast
+l'Espagne : Spain
+les États-Unis : United States
+l'Europe : Europe
+la France : France
+l'Irlande : Ireland
+l'Italie : Italy
+le Japon : Japan
+le Maroc : Morocco
+le Mexique : Mexico
+le Québec : Quebec
+la Roumanie : Romania
+la Russie : Russia
+le Sénégal : Senegal
+la Suisse : Switzerland
+la Tunisie : Tunisia
+le Viêt-Nam : Vietnam
