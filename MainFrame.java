@@ -17,22 +17,22 @@ public class MainFrame extends JFrame {
     }
     
     public void createAndShow() {
-        Box horizontal = Box.createHorizontalBox();
-        Box vertical = Box.createVerticalBox();
+        Box horizontallyPaddedBox = Box.createHorizontalBox();
+        Box mainBox = Box.createVerticalBox();
 
         JButton button;
 
-        horizontal.add(Box.createHorizontalStrut(PADDING));
-        horizontal.add(vertical);
-        horizontal.add(Box.createHorizontalStrut(PADDING));
+        horizontallyPaddedBox.add(Box.createHorizontalStrut(PADDING));
+        horizontallyPaddedBox.add(mainBox);
+        horizontallyPaddedBox.add(Box.createHorizontalStrut(PADDING));
 
-        vertical.add(Box.createVerticalStrut(PADDING));
+        mainBox.add(Box.createVerticalStrut(PADDING));
         // vertical.add(button = new JButton("Practice Conjugations"));
-        vertical.add(button = new JButton("Practice Vocabulary"));
+        mainBox.add(button = new JButton("Practice Vocabulary"));
         button.addActionListener(this::vocabPressed);
-        vertical.add(Box.createVerticalStrut(PADDING));
+        mainBox.add(Box.createVerticalStrut(PADDING));
 
-        add(horizontal);
+        add(horizontallyPaddedBox);
 
         pack();
         setLocationRelativeTo(null);
