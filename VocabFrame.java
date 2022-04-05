@@ -36,10 +36,14 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     private static final Color CORRECT_ANSWER_COLOR = new Color(0, 200, 0);
     private static final Color INCORRECT_ANSWER_COLOR = new Color(200, 0, 0);
+
+    private static final Color COLOR_GENDER_NEUTRAL = Color.BLACK;
+    private static final Color COLOR_MASCULINE = new Color(10, 0, 194);
+    private static final Color COLOR_FEMININE = new Color(204, 0, 139);
     
     private JFrame owner;
 
-    private JLabel flashcardText;
+    private JLabel flashcardLabel;
     private JLabel answerLabel;
     private JTextField answerField;
 
@@ -58,15 +62,30 @@ public class VocabFrame extends JFrame implements WindowListener {
 
         deck = new ArrayList<>();
         incorrectDeck = new ArrayList<>();
-        try {
-            fileChooser.showOpenDialog(null);
-            File f = fileChooser.getSelectedFile();
-            Scanner s = new Scanner(f);
+        fileChooser.showOpenDialog(null);
+        File f = fileChooser.getSelectedFile();
+        try (Scanner s = new Scanner(f)) {
             String deckname = s.nextLine();
+            setTitle("Pratiquer " + deckname);
             while (s.hasNextLine()) {
                 String line = s.nextLine();
-                String[] words = line.split(" : ");
-                deck.add(new FlashCard(words[1], words[0]));
+                String[] pieces = line.split(" : ");
+                String[] englishAnswers = pieces[1].split(",");
+                for (int i = 0; i < englishAnswers.length; i++) {
+                    englishAnswers[i] = englishAnswers[i].strip();
+                }
+                String[] frenchAnswers = pieces[0].split(",");
+                for (int i = 0; i < frenchAnswers.length; i++) {
+                    frenchAnswers[i] = frenchAnswers[i].strip();
+                }
+                Boolean gender = null;
+                char genderChar = pieces[2].strip().charAt(0);
+                if (genderChar == 'm') {
+                    gender = FlashCard.MALE;
+                } else if(genderChar == 'f') {
+                    gender = FlashCard.FEMALE;
+                }
+                deck.add(new FlashCard(englishAnswers, frenchAnswers, gender));
             }
             Collections.shuffle(deck);
         } catch (FileNotFoundException e) {}
@@ -96,9 +115,9 @@ public class VocabFrame extends JFrame implements WindowListener {
 
             Box flashcardTextContainer = Box.createHorizontalBox();
             flashcardTextContainer.add(Box.createHorizontalGlue());
-            flashcardText = new JLabel();
-            flashcardText.setFont(new Font("Helvetica", 0, 48));
-            flashcardTextContainer.add(flashcardText);
+            flashcardLabel = new JLabel();
+            flashcardLabel.setFont(new Font("Helvetica", 0, 48));
+            flashcardTextContainer.add(flashcardLabel);
             flashcardTextContainer.add(Box.createHorizontalGlue());
             textContainer.add(flashcardTextContainer);
 
@@ -149,7 +168,7 @@ public class VocabFrame extends JFrame implements WindowListener {
             answer = currentCard.getFrench();
         }
 
-        if (input.equals(answer)) {
+        if (currentCard.checkAnswer(sideShownIsFrench, input)) {
             answerLabel.setForeground(CORRECT_ANSWER_COLOR);
         } else {
             answerLabel.setForeground(INCORRECT_ANSWER_COLOR);
@@ -187,11 +206,19 @@ public class VocabFrame extends JFrame implements WindowListener {
         } else {
             currentCard = deck.remove(deck.size() - 1);
         }
+        Boolean gender = currentCard.getGender();
+        if (gender == FlashCard.NONE) {
+            flashcardLabel.setForeground(COLOR_GENDER_NEUTRAL);
+        } else if (gender == FlashCard.MALE) {
+            flashcardLabel.setForeground(COLOR_MASCULINE);
+        } else {
+            flashcardLabel.setForeground(COLOR_FEMININE);
+        }
         // flip coin?
         if (sideShownIsFrench) {
-            flashcardText.setText(currentCard.getFrench());
+            flashcardLabel.setText(currentCard.getFrench());
         } else {
-            flashcardText.setText(currentCard.getEnglish());
+            flashcardLabel.setText(currentCard.getEnglish());
         }
         answerLabel.setText("");
         answerField.setEnabled(true);
