@@ -30,13 +30,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- * Ideas: 
- * Gender hints (color of flash card text is either pink or blue)
- * ^ these can be toggled
- * Three modes: show English, show French, both
- */
-
 public class VocabFrame extends JFrame implements WindowListener {
 
     private JFileChooser fileChooser;

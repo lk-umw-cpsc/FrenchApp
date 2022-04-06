@@ -19,7 +19,7 @@ public class FlashCard {
         this.gender = gender;
 
         for (int i = 0; i < englishAnswers.length; i++) {
-            englishAnswers[i] = englishAnswers[i].replaceAll("\\([^)]+\\)", "").strip();
+            englishAnswers[i] = englishAnswers[i].replaceAll("\\([^)]+\\)", "").replaceAll("\\s+", " ").strip();
         }
     }
 
