@@ -20,7 +20,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,11 +27,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class VocabFrame extends JFrame implements WindowListener {
-
-    private JFileChooser fileChooser;
 
     private static final int PADDING = 16;
 
@@ -70,18 +66,13 @@ public class VocabFrame extends JFrame implements WindowListener {
     private Mode mode;
     private Map<JRadioButton, Mode> buttonToModeMap = new HashMap<>();
     
-    public VocabFrame() {
+    public VocabFrame(File f) {
         super("Vocab");
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);
 
-        fileChooser = new JFileChooser(new File("decks"));
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Deck Files", "deck"));
-
         deck = new ArrayList<>();
         incorrectDeck = new ArrayList<>();
-        fileChooser.showOpenDialog(null);
-        File f = fileChooser.getSelectedFile();
         try (Scanner s = new Scanner(f)) {
             String deckname = s.nextLine();
             setTitle("Pratiquer " + deckname);
@@ -248,12 +239,13 @@ public class VocabFrame extends JFrame implements WindowListener {
         }
 
         if (currentCard.checkAnswer(sideShownIsFrench, input)) {
+            answerLabel.setText(input);
             answerLabel.setForeground(CORRECT_ANSWER_COLOR);
         } else {
             answerLabel.setForeground(INCORRECT_ANSWER_COLOR);
+            answerLabel.setText(answer);
             incorrectDeck.add(currentCard);
         }
-        answerLabel.setText(answer);
 
         answerField.setEnabled(false);
         answerField.setText("");
@@ -276,7 +268,8 @@ public class VocabFrame extends JFrame implements WindowListener {
     private void pullCard() {
         if (deck.isEmpty()) {
             if (incorrectDeck.isEmpty()) {
-                System.exit(0);
+                owner.setVisible(true);
+                dispose();
             } else {
                 deck.addAll(incorrectDeck);
                 incorrectDeck.clear();
@@ -322,7 +315,6 @@ public class VocabFrame extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
         owner.setVisible(true);
-        // System.out.println("Window closing!");
     }
 
     @Override

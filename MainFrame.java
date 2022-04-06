@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 
 public class MainFrame extends JFrame {
 
-    private VocabFrame vocabFrame;
+    private DeckChooserFrame deckChooserFrame;
 
     private static final int PADDING = 16;
 
@@ -40,13 +40,11 @@ public class MainFrame extends JFrame {
     }
 
     private void vocabPressed(ActionEvent e) {
-        if (vocabFrame == null) {
-            vocabFrame = new VocabFrame();
-            vocabFrame.createAndShow(this);
-        } else {
-            vocabFrame.setVisible(true);
-            setVisible(false);
+        if (deckChooserFrame == null) {
+            deckChooserFrame = new DeckChooserFrame(this);
         }
+        deckChooserFrame.setVisible(true);
+        setVisible(false);
     }
 
 }
