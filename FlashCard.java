@@ -17,6 +17,10 @@ public class FlashCard {
         this.french = french[0];
         frenchAnswers = french;
         this.gender = gender;
+
+        for (int i = 0; i < englishAnswers.length; i++) {
+            englishAnswers[i] = englishAnswers[i].replaceAll("\\([^)]+\\)", "").strip();
+        }
     }
 
     public Boolean getGender() {
