@@ -8,17 +8,26 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -40,6 +49,8 @@ public class VocabFrame extends JFrame implements WindowListener {
     private static final Color COLOR_GENDER_NEUTRAL = Color.BLACK;
     private static final Color COLOR_MASCULINE = new Color(10, 0, 194);
     private static final Color COLOR_FEMININE = new Color(204, 0, 139);
+
+    private final Random rng = new Random();
     
     private JFrame owner;
 
@@ -51,6 +62,20 @@ public class VocabFrame extends JFrame implements WindowListener {
     private List<FlashCard> deck;
     private List<FlashCard> incorrectDeck;
     private FlashCard currentCard;
+
+    private Box optionsPane;
+    private Box flashcardsPane;
+
+    private JRadioButton showFrench;
+    private JRadioButton showEnglish;
+    private JRadioButton showBoth;
+    private ButtonGroup sideChoice;
+
+    private JCheckBox showGenderHintsOption;
+
+    private boolean showGender;
+    private Mode mode;
+    private Map<JRadioButton, Mode> buttonToModeMap = new HashMap<>();
     
     public VocabFrame() {
         super("Vocab");
@@ -95,20 +120,66 @@ public class VocabFrame extends JFrame implements WindowListener {
         this.owner = owner;
         addWindowListener(this);
 
-        Box horizontalContainer = Box.createHorizontalBox();
-        Box verticalContainer = Box.createVerticalBox();
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        horizontalContainer.add(Box.createHorizontalStrut(PADDING));
-        horizontalContainer.add(verticalContainer);
-        horizontalContainer.add(Box.createHorizontalStrut(PADDING));
+        optionsPane = Box.createVerticalBox();
+        optionsPane.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
 
-        verticalContainer.add(Box.createVerticalStrut(PADDING));
+        Box layer = Box.createHorizontalBox();
+            layer.add(new JLabel("Show side:"));
+            layer.add(Box.createHorizontalGlue());
+        optionsPane.add(layer);
+
+        layer = Box.createHorizontalBox();
+            showEnglish = new JRadioButton("English (hard)");
+            layer.add(showEnglish);
+            showFrench = new JRadioButton("French (easy)");
+            layer.add(showFrench);
+            showBoth = new JRadioButton("Both (random)");
+            layer.add(showBoth);
+
+            sideChoice = new ButtonGroup();
+            sideChoice.add(showEnglish);
+            sideChoice.add(showFrench);
+            sideChoice.add(showBoth);
+            showEnglish.setSelected(true);
+
+            buttonToModeMap.put(showEnglish, Mode.ENGLISH);
+            buttonToModeMap.put(showFrench, Mode.ENGLISH);
+            buttonToModeMap.put(showBoth, Mode.RANDOM);
+        optionsPane.add(layer);
+
+        optionsPane.add(Box.createHorizontalStrut(PADDING));
+
+        layer = Box.createHorizontalBox();
+            layer.add(new JLabel("Additonal options:"));
+            layer.add(Box.createHorizontalGlue());
+        optionsPane.add(layer);
+
+        layer = Box.createHorizontalBox();
+            showGenderHintsOption = new JCheckBox("Show gender hints");
+            showGenderHintsOption.setSelected(true);
+            layer.add(showGenderHintsOption);
+            layer.add(Box.createHorizontalGlue());
+        optionsPane.add(layer);
+
+        JButton startButton = new JButton("Start!");
+        Dimension d = startButton.getPreferredSize();
+        startButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)d.getHeight()));
+        startButton.addActionListener(this::startButtonPressed);
+        optionsPane.add(startButton);
+
+        add(optionsPane);
+
+        flashcardsPane = Box.createVerticalBox();
+
+        flashcardsPane.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
 
             JPanel flashcard = new JPanel();
             flashcard.setPreferredSize(new Dimension(600, 300));
             flashcard.setBackground(Color.WHITE);
             flashcard.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-            verticalContainer.add(flashcard);
+            flashcardsPane.add(flashcard);
 
             Box textContainer = Box.createVerticalBox();
             textContainer.add(Box.createVerticalStrut(120));
@@ -133,19 +204,34 @@ public class VocabFrame extends JFrame implements WindowListener {
             
             flashcard.add(textContainer);
 
-        verticalContainer.add(answerField = new JTextField());
+        flashcardsPane.add(answerField = new JTextField());
         answerField.addActionListener(this::answerSubmitted);
         answerField.setFont(new Font("Helvetica", 0, 24));
         answerField.setHorizontalAlignment(JTextField.CENTER);
-        
-        verticalContainer.add(Box.createVerticalStrut(PADDING));
 
-        add(horizontalContainer);
+        flashcardsPane.setVisible(false);
+        
+        add(flashcardsPane);
 
         pack();
         setLocationRelativeTo(owner);
-        pullCard();
         setVisible(true);
+    }
+
+    private void startButtonPressed(ActionEvent e) {
+        if (showEnglish.isSelected()) {
+            mode = Mode.ENGLISH;
+        } else if(showFrench.isSelected()) {
+            mode = Mode.FRENCH;
+        } else {
+            mode = Mode.RANDOM;
+        }
+        showGender = showGenderHintsOption.isSelected();
+
+        pullCard();
+        optionsPane.setVisible(false);
+        flashcardsPane.setVisible(true);
+        pack();
     }
 
     /**
@@ -207,7 +293,7 @@ public class VocabFrame extends JFrame implements WindowListener {
             currentCard = deck.remove(deck.size() - 1);
         }
         Boolean gender = currentCard.getGender();
-        if (gender == FlashCard.NONE) {
+        if (!showGender || gender == FlashCard.NONE) {
             flashcardLabel.setForeground(COLOR_GENDER_NEUTRAL);
         } else if (gender == FlashCard.MALE) {
             flashcardLabel.setForeground(COLOR_MASCULINE);
@@ -215,6 +301,16 @@ public class VocabFrame extends JFrame implements WindowListener {
             flashcardLabel.setForeground(COLOR_FEMININE);
         }
         // flip coin?
+        switch (mode) {
+            case ENGLISH:
+                sideShownIsFrench = false;
+                break;
+            case FRENCH:
+                sideShownIsFrench = true;
+                break;
+            case RANDOM:
+                sideShownIsFrench = rng.nextBoolean();
+        }
         if (sideShownIsFrench) {
             flashcardLabel.setText(currentCard.getFrench());
         } else {
