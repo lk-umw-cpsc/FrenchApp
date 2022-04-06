@@ -15,10 +15,10 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
 
     private JFrame owner;
 
-    public static void main(String[] args) {
-        System.out.println(root);
-        new DeckChooserFrame(null).setVisible(true);
-    }
+    // public static void main(String[] args) {
+    //     System.out.println(root);
+    //     new DeckChooserFrame(null).setVisible(true);
+    // }
     
     public DeckChooserFrame(JFrame owner) {
         this.owner = owner;
