@@ -41,7 +41,7 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     private final Random rng = new Random();
     
-    private JFrame owner;
+    private JFrame parent;
 
     private JLabel flashcardLabel;
     private JLabel answerLabel;
@@ -100,8 +100,8 @@ public class VocabFrame extends JFrame implements WindowListener {
         } catch (FileNotFoundException e) {}
     }
 
-    public void createAndShow(JFrame owner) {
-        this.owner = owner;
+    public void createAndShow(JFrame parent) {
+        this.parent = parent;
         addWindowListener(this);
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -198,7 +198,7 @@ public class VocabFrame extends JFrame implements WindowListener {
         add(flashcardsPane);
 
         pack();
-        setLocationRelativeTo(owner);
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
 
@@ -268,7 +268,7 @@ public class VocabFrame extends JFrame implements WindowListener {
     private void pullCard() {
         if (deck.isEmpty()) {
             if (incorrectDeck.isEmpty()) {
-                owner.setVisible(true);
+                parent.setVisible(true);
                 dispose();
             } else {
                 deck.addAll(incorrectDeck);
@@ -314,7 +314,7 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        owner.setVisible(true);
+        parent.setVisible(true);
     }
 
     @Override

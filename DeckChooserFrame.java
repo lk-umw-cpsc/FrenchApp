@@ -13,15 +13,15 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
 
     private Box entryContainer;
 
-    private JFrame owner;
+    private JFrame parent;
 
     // public static void main(String[] args) {
     //     System.out.println(root);
     //     new DeckChooserFrame(null).setVisible(true);
     // }
     
-    public DeckChooserFrame(JFrame owner) {
-        this.owner = owner;
+    public DeckChooserFrame(JFrame parent) {
+        this.parent = parent;
         addWindowListener(this);
         setTitle("Choose a deck");
         entryContainer = Box.createVerticalBox();
@@ -40,7 +40,7 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         scrollPane.setPreferredSize(new Dimension(400, 300));
         add(scrollPane);
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
     }
 
     public void folderSelected(File folder) {
@@ -72,8 +72,8 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        if (owner != null) {
-            owner.setVisible(true);
+        if (parent != null) {
+            parent.setVisible(true);
         } else {
             System.exit(0);
         }
