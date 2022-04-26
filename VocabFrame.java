@@ -73,7 +73,7 @@ public class VocabFrame extends JFrame implements WindowListener {
 
         deck = new ArrayList<>();
         incorrectDeck = new ArrayList<>();
-        try (Scanner s = new Scanner(f)) {
+        try (Scanner s = new Scanner(f, "UTF-8")) {
             String deckname = s.nextLine();
             setTitle("Pratiquer " + deckname);
             int lineNumber = 1;

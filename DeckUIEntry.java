@@ -41,7 +41,7 @@ public class DeckUIEntry extends JPanel implements MouseListener {
         if (isFolder && !file.getName().equals("decks")) {
             desc = file.getName();
         } else {
-            try (Scanner in = new Scanner(file)) {
+            try (Scanner in = new Scanner(file, "UTF-8")) {
                 desc = in.nextLine();
             } catch (FileNotFoundException e) {}
         }
