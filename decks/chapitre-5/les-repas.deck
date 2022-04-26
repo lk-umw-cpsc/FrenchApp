@@ -6,7 +6,7 @@ le goûter : snack : m
 la nourriture : food : f
 un aliment : a particular food : m
 les biscuits : cookies : m
-des céréales : cereal : f
+les céréales : cereal : f
 les chips : chips : f
 les frites : french fries : f
 le fromage : cheese : m
@@ -18,13 +18,13 @@ le riz : rice : m
 un sandwich : a sandwich : m
 la yaourt : yogurt : f
 les boissons : drinks, beverages : f
-la bière : beer : m
-le citron pressé : lemonade : f
+la bière : beer : f
+le citron pressé : lemonade : m
 le Coca : Coca-Cola, coke : m
 le lait : milk : m
 le thé : tea : m
 les fruits : fruits : m
-un banane : a banana : m
+une banane : a banana : f
 une orange : an orange : f
 une pomme : an apple : f
 les légumes : vegetables : m
@@ -34,7 +34,7 @@ la viande : meat : f
 le bœuf : beef : m
 un rôti : a roast : m
 un rôti de porc : a pork roast : m
-un hors-d’œuvre : a starter : m
+un hors-d'œuvre : a starter : m
 une entrée : an appetizer : f
 les repas : meals : m
 le beurre : butter : m

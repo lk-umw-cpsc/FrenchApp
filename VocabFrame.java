@@ -76,25 +76,35 @@ public class VocabFrame extends JFrame implements WindowListener {
         try (Scanner s = new Scanner(f)) {
             String deckname = s.nextLine();
             setTitle("Pratiquer " + deckname);
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                String[] pieces = line.split(" : ");
-                String[] englishAnswers = pieces[1].split(",");
-                for (int i = 0; i < englishAnswers.length; i++) {
-                    englishAnswers[i] = englishAnswers[i].strip();
+            int lineNumber = 1;
+            String line = "";
+            try {
+                while (s.hasNextLine()) {
+                    line = s.nextLine();
+                    String[] pieces = line.split(" : ");
+                    String[] englishAnswers = pieces[1].split(",");
+                    for (int i = 0; i < englishAnswers.length; i++) {
+                        englishAnswers[i] = englishAnswers[i].strip();
+                    }
+                    String[] frenchAnswers = pieces[0].split(",");
+                    for (int i = 0; i < frenchAnswers.length; i++) {
+                        frenchAnswers[i] = frenchAnswers[i].strip();
+                    }
+                    Boolean gender = null;
+                    char genderChar = pieces[2].strip().charAt(0);
+                    if (genderChar == 'm') {
+                        gender = FlashCard.MALE;
+                    } else if(genderChar == 'f') {
+                        gender = FlashCard.FEMALE;
+                    }
+                    deck.add(new FlashCard(englishAnswers, frenchAnswers, gender));
+                    lineNumber++;
                 }
-                String[] frenchAnswers = pieces[0].split(",");
-                for (int i = 0; i < frenchAnswers.length; i++) {
-                    frenchAnswers[i] = frenchAnswers[i].strip();
-                }
-                Boolean gender = null;
-                char genderChar = pieces[2].strip().charAt(0);
-                if (genderChar == 'm') {
-                    gender = FlashCard.MALE;
-                } else if(genderChar == 'f') {
-                    gender = FlashCard.FEMALE;
-                }
-                deck.add(new FlashCard(englishAnswers, frenchAnswers, gender));
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Fatal error reading line " + lineNumber + " of " + f + ":");
+                System.out.println(line);
+                System.out.println("Incorrect number of arguments on this line");
+                System.exit(0);
             }
             Collections.shuffle(deck);
         } catch (FileNotFoundException e) {}
