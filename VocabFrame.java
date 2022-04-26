@@ -81,7 +81,7 @@ public class VocabFrame extends JFrame implements WindowListener {
             try {
                 while (s.hasNextLine()) {
                     line = s.nextLine();
-                    String[] pieces = line.split(" : ");
+                    String[] pieces = line.split(" \\| ");
                     String[] englishAnswers = pieces[1].split(",");
                     for (int i = 0; i < englishAnswers.length; i++) {
                         englishAnswers[i] = englishAnswers[i].strip();
