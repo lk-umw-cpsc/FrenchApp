@@ -1,4 +1,11 @@
-les jours de la semaine
+les jours et l'emploi du temps
+lundi | Monday | n
+mardi | Tuesday | n
+mercredi | Wednesday | n
+jeudi | Thursday | n
+vendredi | Friday | n
+samedi | Saturday | n
+dimanche | Sunday | n
 la semaine | the week | f
 les jours | the days | m
 le matin | the morning | m
@@ -15,3 +22,6 @@ tous les jours | every day | m
 tous les soirs | every evening | m
 Quel jour sommes-nous? | What day is it? | m
 Nous somme mardi. | It's Tuesday. | m
+les gens | people | m
+l'hôtel | hotel | m
+une personne | a person | f
