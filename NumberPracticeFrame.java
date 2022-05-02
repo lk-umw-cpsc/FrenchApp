@@ -2,6 +2,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,11 +23,28 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     private JLabel promptLabel;
 
     private JTextField inputField;
+
+    private String[] numbers = new String[101];
+    private List<Integer> numbersRemaining;
+    private final Random rng;
+    private String answer;
     
     public NumberPracticeFrame(JFrame parent) {
         super("Pratiquer les numeros");
 
         this.parent = parent;
+
+        numbersRemaining = new ArrayList<>();
+
+        loadNumbers();
+        for (int i = 0; i < numbers.length; i++) {
+            numbersRemaining.add(i);
+        }
+
+        rng = new Random();
+
+        int n = pickNumber();
+        answer = numbers[n];
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setResizable(false);
@@ -57,8 +80,31 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         rowContainer.add(inputField);
 
         add(rowContainer);
+        promptLabel.setText(Integer.toString(n));
         pack();
         setLocationRelativeTo(parent);
+    }
+
+    /**
+     * Loads words for French numbers into the class's data structures
+     */
+    private void loadNumbers() {
+        final File inputFile = new File("data/numeros.txt");
+        try(Scanner s = new Scanner(inputFile)) {
+            for (int i = 0; i <= 100; i++) {
+                numbers[i] = s.nextLine();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Couldn't open " + inputFile);
+        }
+    }
+
+    /**
+     * Removes a random number from the remaining numbers
+     * @return the number picked
+     */
+    private int pickNumber() {
+        return rng.nextInt(numbersRemaining.size());
     }
 
     public static void main(String[] args) {
@@ -66,7 +112,24 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     }
 
     private void inputSubmitted(ActionEvent e) {
-
+        String input = inputField.getText().toLowerCase().strip();
+        if (input.isBlank()) {
+            return;
+        }
+        if (input.equals(answer)) {
+            System.out.println("Correct!");
+        } else {
+            System.out.println("Incorrect!");
+        }
+        if (numbersRemaining.isEmpty()) {
+            // ...
+        } else {
+            int n = pickNumber();
+            answer = numbers[n];
+            promptLabel.setText(Integer.toString(n));
+            inputField.setText("");
+            pack();
+        }
     }
 
     @Override
