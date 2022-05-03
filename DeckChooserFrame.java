@@ -14,11 +14,6 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
     private Box entryContainer;
 
     private JFrame parent;
-
-    // public static void main(String[] args) {
-    //     System.out.println(root);
-    //     new DeckChooserFrame(null).setVisible(true);
-    // }
     
     public DeckChooserFrame(JFrame parent) {
         this.parent = parent;
