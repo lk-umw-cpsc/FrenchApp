@@ -2,6 +2,9 @@ import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
@@ -19,12 +22,17 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         this.parent = parent;
         addWindowListener(this);
         setTitle("Choose a deck");
-        entryContainer = Box.createVerticalBox();
+        List<DeckUIEntry> entries = new ArrayList<>();
         for (File f : root.listFiles()) {
             if (f.getName().startsWith(".")) {
                 continue;
             }
-            entryContainer.add(new DeckUIEntry(this, f));
+            entries.add(new DeckUIEntry(this, f));
+        }
+        Collections.sort(entries);
+        entryContainer = Box.createVerticalBox();
+        for (DeckUIEntry entry : entries) {
+            entryContainer.add(entry);
         }
         entryContainer.add(Box.createVerticalGlue());
 

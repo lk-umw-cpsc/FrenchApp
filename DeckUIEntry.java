@@ -11,12 +11,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class DeckUIEntry extends JPanel implements MouseListener {
+public class DeckUIEntry extends JPanel implements MouseListener, Comparable<DeckUIEntry> {
 
     private boolean isFolder;
 
     private DeckChooserFrame parent;
     private File file;
+    private int order;
     
     public DeckUIEntry(DeckChooserFrame parent, File file) {
         this.parent = parent;
@@ -40,6 +41,14 @@ public class DeckUIEntry extends JPanel implements MouseListener {
         String desc = "..";
         if (isFolder && !file.getName().equals("decks")) {
             desc = file.getName();
+            File descriptionFile = new File(file.getAbsolutePath() + "/.description");
+            if (descriptionFile.exists()) {
+                try (Scanner in = new Scanner(descriptionFile, "UTF-8")) {
+                    desc = in.nextLine();
+                    order = in.nextInt();
+                } catch (FileNotFoundException e) {
+                }
+            }
         } else {
             try (Scanner in = new Scanner(file, "UTF-8")) {
                 desc = in.nextLine();
@@ -78,6 +87,11 @@ public class DeckUIEntry extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         
+    }
+
+    @Override
+    public int compareTo(DeckUIEntry e) {
+        return order - e.order;
     }
 
 }
