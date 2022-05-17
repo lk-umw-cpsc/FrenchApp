@@ -1,4 +1,7 @@
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -23,12 +26,19 @@ public class MainFrame extends JFrame {
         mainBox.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
 
         JButton button;
+        List<JButton> buttons = new ArrayList<>();
 
         mainBox.add(button = new JButton("Practice Vocabulary"));
         button.addActionListener(this::vocabPressed);
+        buttons.add(button);
 
         mainBox.add(button = new JButton("Practice Numbers"));
         button.addActionListener(this::numbersPressed);
+        buttons.add(button);
+        
+        for (JButton b : buttons) {
+            b.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)b.getPreferredSize().getHeight()));
+        }
         
         add(mainBox);
 

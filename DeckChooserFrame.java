@@ -22,19 +22,8 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         this.parent = parent;
         addWindowListener(this);
         setTitle("Choose a deck");
-        List<DeckUIEntry> entries = new ArrayList<>();
-        for (File f : root.listFiles()) {
-            if (f.getName().startsWith(".")) {
-                continue;
-            }
-            entries.add(new DeckUIEntry(this, f));
-        }
-        Collections.sort(entries);
         entryContainer = Box.createVerticalBox();
-        for (DeckUIEntry entry : entries) {
-            entryContainer.add(entry);
-        }
-        entryContainer.add(Box.createVerticalGlue());
+        updateEntries(root.listFiles());
 
         JScrollPane scrollPane = new JScrollPane(entryContainer);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -46,18 +35,27 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         setLocationRelativeTo(parent);
     }
 
+    private void updateEntries(File[] files) {
+        List<DeckUIEntry> entries = new ArrayList<>();
+        for (File f : files) {
+            if (f.getName().startsWith(".")) {
+                continue;
+            }
+            entries.add(new DeckUIEntry(this, f));
+        }
+        Collections.sort(entries);
+        for (DeckUIEntry entry : entries) {
+            entryContainer.add(entry);
+        }
+        entryContainer.add(Box.createVerticalGlue());
+    }
+
     public void folderSelected(File folder) {
         entryContainer.removeAll();
         if (!folder.equals(root)) {
             entryContainer.add(new DeckUIEntry(this, root));
         }
-        for (File f : folder.listFiles()) {
-            if (f.getName().startsWith(".")) {
-                continue;
-            }
-            entryContainer.add(new DeckUIEntry(this, f));
-        }
-        entryContainer.add(Box.createVerticalGlue());
+        updateEntries(folder.listFiles());
         revalidate();
         repaint();
     }
