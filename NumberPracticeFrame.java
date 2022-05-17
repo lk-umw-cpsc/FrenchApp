@@ -107,10 +107,6 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         return rng.nextInt(numbersRemaining.size());
     }
 
-    public static void main(String[] args) {
-        new NumberPracticeFrame(null).setVisible(true);
-    }
-
     private void inputSubmitted(ActionEvent e) {
         String input = inputField.getText().toLowerCase().strip();
         if (input.isBlank()) {

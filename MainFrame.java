@@ -3,10 +3,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.border.EmptyBorder;
 
 public class MainFrame extends JFrame {
 
     private DeckChooserFrame deckChooserFrame;
+    private NumberPracticeFrame numberPracticeFrame;
 
     private static final int PADDING = 16;
 
@@ -17,22 +19,18 @@ public class MainFrame extends JFrame {
     }
     
     public void createAndShow() {
-        Box horizontallyPaddedBox = Box.createHorizontalBox();
         Box mainBox = Box.createVerticalBox();
+        mainBox.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
 
         JButton button;
 
-        horizontallyPaddedBox.add(Box.createHorizontalStrut(PADDING));
-        horizontallyPaddedBox.add(mainBox);
-        horizontallyPaddedBox.add(Box.createHorizontalStrut(PADDING));
-
-        mainBox.add(Box.createVerticalStrut(PADDING));
-        // vertical.add(button = new JButton("Practice Conjugations"));
         mainBox.add(button = new JButton("Practice Vocabulary"));
         button.addActionListener(this::vocabPressed);
-        mainBox.add(Box.createVerticalStrut(PADDING));
 
-        add(horizontallyPaddedBox);
+        mainBox.add(button = new JButton("Practice Numbers"));
+        button.addActionListener(this::numbersPressed);
+        
+        add(mainBox);
 
         pack();
         setLocationRelativeTo(null);
@@ -44,6 +42,14 @@ public class MainFrame extends JFrame {
             deckChooserFrame = new DeckChooserFrame(this);
         }
         deckChooserFrame.setVisible(true);
+        setVisible(false);
+    }
+
+    private void numbersPressed(ActionEvent e) {
+        if (numberPracticeFrame == null) {
+            numberPracticeFrame = new NumberPracticeFrame(this);
+        }
+        numberPracticeFrame.setVisible(true);
         setVisible(false);
     }
 
