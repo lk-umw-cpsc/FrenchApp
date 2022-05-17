@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
@@ -14,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 public class NumberPracticeFrame extends JFrame implements WindowListener {
@@ -30,13 +32,13 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     private String answer;
     
     public NumberPracticeFrame(JFrame parent) {
-        super("Pratiquer les numeros");
+        super("Pratiquer les nombres");
 
         this.parent = parent;
 
-        numbersRemaining = new ArrayList<>();
-
         loadNumbers();
+
+        numbersRemaining = new ArrayList<>();
         addAllNumbersToRemainingList();
 
         rng = new Random();
@@ -68,6 +70,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             row.add(promptLabel);
             row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
+        rowContainer.add(Box.createVerticalStrut(4));
 
             inputField = new JTextField(24);
             inputField.setHorizontalAlignment(JTextField.CENTER);
@@ -87,7 +90,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
      * Loads words for French numbers into the class's data structures
      */
     private void loadNumbers() {
-        final File inputFile = new File("data/numeros.txt");
+        final File inputFile = new File("data/les-nombres.txt");
         try(Scanner s = new Scanner(inputFile)) {
             for (int i = 0; i <= 100; i++) {
                 numbers[i] = s.nextLine();
@@ -117,18 +120,33 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             return;
         }
         if (input.equals(answer)) {
-            System.out.println("Correct!");
+            inputField.setEnabled(false);
+            promptLabel.setText("Correct!");
+            promptLabel.setForeground(Color.GREEN);
+            new Thread(this::waitThenPickNext).start();
         } else {
-            System.out.println("Incorrect!");
+            return;
         }
         if (numbersRemaining.isEmpty()) {
             addAllNumbersToRemainingList();
         }
+    }
+
+    private void pickNext() {
         int n = pickNumber();
         answer = numbers[n];
+        promptLabel.setForeground(Color.BLACK);
         promptLabel.setText(Integer.toString(n));
         inputField.setText("");
+        inputField.setEnabled(true);
         pack();
+    }
+
+    private void waitThenPickNext() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {}
+        SwingUtilities.invokeLater(this::pickNext);
     }
 
     @Override
