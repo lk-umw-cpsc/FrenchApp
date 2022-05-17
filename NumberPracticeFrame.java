@@ -37,9 +37,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         numbersRemaining = new ArrayList<>();
 
         loadNumbers();
-        for (int i = 0; i < numbers.length; i++) {
-            numbersRemaining.add(i);
-        }
+        addAllNumbersToRemainingList();
 
         rng = new Random();
 
@@ -99,6 +97,12 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         }
     }
 
+    private void addAllNumbersToRemainingList() {
+        for (int i = 0; i < numbers.length; i++) {
+            numbersRemaining.add(i);
+        }
+    }
+
     /**
      * Removes a random number from the remaining numbers
      * @return the number picked
@@ -118,14 +122,13 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             System.out.println("Incorrect!");
         }
         if (numbersRemaining.isEmpty()) {
-            // ...
-        } else {
-            int n = pickNumber();
-            answer = numbers[n];
-            promptLabel.setText(Integer.toString(n));
-            inputField.setText("");
-            pack();
+            addAllNumbersToRemainingList();
         }
+        int n = pickNumber();
+        answer = numbers[n];
+        promptLabel.setText(Integer.toString(n));
+        inputField.setText("");
+        pack();
     }
 
     @Override
