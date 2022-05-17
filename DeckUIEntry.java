@@ -1,7 +1,9 @@
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+
 import java.util.Scanner;
 
 import javax.swing.Box;
@@ -93,5 +95,4 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
     public int compareTo(DeckUIEntry e) {
         return order - e.order;
     }
-
 }
