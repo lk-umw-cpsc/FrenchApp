@@ -38,7 +38,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
 
         loadNumbers();
 
-        numbersRemaining = new ArrayList<>();
+        numbersRemaining = new ArrayList<>(256);
         addAllNumbersToRemainingList();
 
         rng = new Random();
