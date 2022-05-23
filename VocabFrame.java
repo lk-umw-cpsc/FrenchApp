@@ -6,6 +6,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,6 +54,7 @@ public class VocabFrame extends JFrame implements WindowListener {
     private boolean sideShownIsFrench;
     private List<FlashCard> deck;
     private List<FlashCard> incorrectDeck;
+    private List<FlashCard> allCards;
     private FlashCard currentCard;
 
     private Box optionsPane;
@@ -65,23 +70,39 @@ public class VocabFrame extends JFrame implements WindowListener {
     private boolean showGender;
     private Mode mode;
     private Map<JRadioButton, Mode> buttonToModeMap = new HashMap<>();
+
+    private final File deckFile;
+    private String deckDescription;
     
     public VocabFrame(File f) {
         super("Vocab");
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);
 
+        deckFile = f;
+
         deck = new ArrayList<>();
         incorrectDeck = new ArrayList<>();
         try (Scanner s = new Scanner(f, "UTF-8")) {
-            String deckname = s.nextLine();
-            setTitle("Pratiquer " + deckname);
+            deckDescription = s.nextLine();
+            setTitle("Pratiquer " + deckDescription);
             int lineNumber = 1;
             String line = "";
             try {
                 while (s.hasNextLine()) {
-                    line = s.nextLine();
-                    String[] pieces = line.split(" \\| ");
+                    line = s.nextLine().strip();;
+                    String[] stringAndDueDate = line.split(" @ ");
+                    String string = stringAndDueDate[0];
+                    LocalDate dueDate = null;
+                    if (stringAndDueDate.length > 1) {
+                        try {
+                            dueDate = LocalDate.parse(stringAndDueDate[1]);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid due date for following card:");
+                            System.out.println(line);
+                        }
+                    }
+                    String[] pieces = string.split(" \\| ");
                     String[] englishAnswers = pieces[1].split(",");
                     for (int i = 0; i < englishAnswers.length; i++) {
                         englishAnswers[i] = englishAnswers[i].strip();
@@ -97,7 +118,7 @@ public class VocabFrame extends JFrame implements WindowListener {
                     } else if(genderChar == 'f') {
                         gender = FlashCard.FEMALE;
                     }
-                    deck.add(new FlashCard(englishAnswers, frenchAnswers, gender));
+                    deck.add(new FlashCard(string, dueDate, englishAnswers, frenchAnswers, gender));
                     lineNumber++;
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -316,44 +337,50 @@ public class VocabFrame extends JFrame implements WindowListener {
         answerField.setEnabled(true);
     }
 
-    @Override
-    public void windowOpened(WindowEvent e) {
-        // TODO Auto-generated method stub
-        
+    private void saveDeck() {
+        try (PrintWriter out = new PrintWriter(deckFile)) {
+            out.println(deckDescription);
+            for (FlashCard c : allCards) {
+                out.println(c.getDeckFileString());
+            }
+        } catch (IOException e) {}
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        parent.setVisible(true);
+        saveDeck();
+        if (parent != null) {
+            parent.setVisible(true);
+        }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        // TODO Auto-generated method stub
         
     }
 
