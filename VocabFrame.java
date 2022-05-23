@@ -4,12 +4,15 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -306,6 +309,7 @@ public class VocabFrame extends JFrame implements WindowListener {
     private void pullCard() {
         if (cardsBeingStudied.isEmpty()) {
             if (incorrectDeck.isEmpty()) {
+                saveDeck();
                 parent.setVisible(true);
                 dispose();
             } else {
