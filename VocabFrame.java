@@ -135,6 +135,9 @@ public class VocabFrame extends JFrame implements WindowListener {
                 System.out.println("Incorrect number of arguments on this line");
                 System.exit(0);
             }
+            if (cardsBeingStudied.isEmpty()) {
+                cardsBeingStudied.addAll(allCards);
+            }
             Collections.shuffle(cardsBeingStudied);
         } catch (FileNotFoundException e) {}
     }
