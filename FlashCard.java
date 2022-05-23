@@ -2,6 +2,10 @@ import java.time.LocalDate;
 
 public class FlashCard {
 
+    // number of days between cards being shown for study
+    private static final int STUDY_INTERVAL_CORRECT = 7;
+    private static final int STUDY_INTERVAL_INCORRECT = 1;
+
     public static final boolean MALE = false;
     public static final boolean FEMALE = true;
     public static final Boolean NONE = null;
@@ -93,6 +97,14 @@ public class FlashCard {
             return deckFileString + " @ " + dueDate.toString();
         }
         return deckFileString;
+    }
+
+    public void updateDueDate(boolean userWasCorrect) {
+        if (userWasCorrect) {
+            setDueInDays(STUDY_INTERVAL_CORRECT);
+        } else {
+            setDueInDays(STUDY_INTERVAL_INCORRECT);
+        }
     }
 
     /**

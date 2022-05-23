@@ -52,7 +52,7 @@ public class VocabFrame extends JFrame implements WindowListener {
     private JTextField answerField;
 
     private boolean sideShownIsFrench;
-    private List<FlashCard> deck;
+    private List<FlashCard> cardsBeingStudied;
     private List<FlashCard> incorrectDeck;
     private List<FlashCard> allCards;
     private FlashCard currentCard;
@@ -81,7 +81,8 @@ public class VocabFrame extends JFrame implements WindowListener {
 
         deckFile = f;
 
-        deck = new ArrayList<>();
+        allCards = new ArrayList<>();
+        cardsBeingStudied = new ArrayList<>();
         incorrectDeck = new ArrayList<>();
         try (Scanner s = new Scanner(f, "UTF-8")) {
             deckDescription = s.nextLine();
@@ -118,7 +119,11 @@ public class VocabFrame extends JFrame implements WindowListener {
                     } else if(genderChar == 'f') {
                         gender = FlashCard.FEMALE;
                     }
-                    deck.add(new FlashCard(string, dueDate, englishAnswers, frenchAnswers, gender));
+                    FlashCard card = new FlashCard(string, dueDate, englishAnswers, frenchAnswers, gender);
+                    allCards.add(card);
+                    if (card.isDue()) {
+                        cardsBeingStudied.add(card);
+                    }
                     lineNumber++;
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -127,7 +132,7 @@ public class VocabFrame extends JFrame implements WindowListener {
                 System.out.println("Incorrect number of arguments on this line");
                 System.exit(0);
             }
-            Collections.shuffle(deck);
+            Collections.shuffle(cardsBeingStudied);
         } catch (FileNotFoundException e) {}
     }
 
@@ -272,10 +277,12 @@ public class VocabFrame extends JFrame implements WindowListener {
         if (currentCard.checkAnswer(sideShownIsFrench, input)) {
             answerLabel.setText(input);
             answerLabel.setForeground(CORRECT_ANSWER_COLOR);
+            currentCard.updateDueDate(true);
         } else {
             answerLabel.setForeground(INCORRECT_ANSWER_COLOR);
             answerLabel.setText(answer);
             incorrectDeck.add(currentCard);
+            currentCard.updateDueDate(false);
         }
 
         answerField.setEnabled(false);
@@ -297,17 +304,17 @@ public class VocabFrame extends JFrame implements WindowListener {
      * Chooses a new card and displays it.
      */
     private void pullCard() {
-        if (deck.isEmpty()) {
+        if (cardsBeingStudied.isEmpty()) {
             if (incorrectDeck.isEmpty()) {
                 parent.setVisible(true);
                 dispose();
             } else {
-                deck.addAll(incorrectDeck);
+                cardsBeingStudied.addAll(incorrectDeck);
                 incorrectDeck.clear();
-                currentCard = deck.remove(deck.size() - 1);
+                currentCard = cardsBeingStudied.remove(cardsBeingStudied.size() - 1);
             }
         } else {
-            currentCard = deck.remove(deck.size() - 1);
+            currentCard = cardsBeingStudied.remove(cardsBeingStudied.size() - 1);
         }
         Boolean gender = currentCard.getGender();
         if (!showGender || gender == FlashCard.NONE) {
@@ -337,6 +344,10 @@ public class VocabFrame extends JFrame implements WindowListener {
         answerField.setEnabled(true);
     }
 
+    /**
+     * Saves the current deck's cards, updating their
+     * due dates
+     */
     private void saveDeck() {
         try (PrintWriter out = new PrintWriter(deckFile)) {
             out.println(deckDescription);
