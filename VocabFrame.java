@@ -64,6 +64,8 @@ public class VocabFrame extends JFrame implements WindowListener {
     private Mode mode;
     private Map<JRadioButton, Mode> buttonToModeMap = new HashMap<>();
 
+    private boolean reviewingMistakes;
+
     private Deck deck;
     
     public VocabFrame(Deck deck) {
@@ -192,11 +194,11 @@ public class VocabFrame extends JFrame implements WindowListener {
             mode = Mode.RANDOM;
         }
         showGender = showGenderHintsOption.isSelected();
-
         pullCard();
         optionsPane.setVisible(false);
         flashcardsPane.setVisible(true);
         pack();
+        setLocationRelativeTo(parent);
     }
 
     /**
@@ -222,7 +224,9 @@ public class VocabFrame extends JFrame implements WindowListener {
         if (currentCard.checkAnswer(sideShownIsFrench, input)) {
             answerLabel.setText(input);
             answerLabel.setForeground(CORRECT_ANSWER_COLOR);
-            currentCard.updateDueDate(true);
+            if (!reviewingMistakes) {
+                currentCard.updateDueDate(true);
+            }
         } else {
             answerLabel.setForeground(INCORRECT_ANSWER_COLOR);
             answerLabel.setText(answer);
@@ -250,6 +254,7 @@ public class VocabFrame extends JFrame implements WindowListener {
      */
     private void pullCard() {
         if (cardsBeingStudied.isEmpty()) {
+            reviewingMistakes = true;
             if (incorrectDeck.isEmpty()) {
                 deck.save();
                 parent.setVisible(true);
