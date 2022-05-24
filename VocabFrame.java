@@ -46,8 +46,8 @@ public class VocabFrame extends JFrame implements WindowListener {
     private JTextField answerField;
 
     private boolean sideShownIsFrench;
-    private List<FlashCard> cardsBeingStudied;
-    private List<FlashCard> incorrectDeck;
+    private List<FlashCard> dueCardsRemaining;
+    private List<FlashCard> incorrectPile;
     private FlashCard currentCard;
 
     private Box optionsPane;
@@ -75,12 +75,12 @@ public class VocabFrame extends JFrame implements WindowListener {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);
 
-        cardsBeingStudied = deck.getDueCards();
-        if (cardsBeingStudied.isEmpty()) {
-            cardsBeingStudied.addAll(deck.getCards());
+        dueCardsRemaining = deck.getDueCards();
+        if (dueCardsRemaining.isEmpty()) {
+            dueCardsRemaining.addAll(deck.getCards());
         }
-        Collections.shuffle(cardsBeingStudied);
-        incorrectDeck = new ArrayList<>();
+        Collections.shuffle(dueCardsRemaining);
+        incorrectPile = new ArrayList<>();
     }
 
     public void createAndShow(JFrame parent) {
@@ -230,7 +230,7 @@ public class VocabFrame extends JFrame implements WindowListener {
         } else {
             answerLabel.setForeground(INCORRECT_ANSWER_COLOR);
             answerLabel.setText(answer);
-            incorrectDeck.add(currentCard);
+            incorrectPile.add(currentCard);
             currentCard.updateDueDate(false);
         }
 
@@ -253,19 +253,19 @@ public class VocabFrame extends JFrame implements WindowListener {
      * Chooses a new card and displays it.
      */
     private void pullCard() {
-        if (cardsBeingStudied.isEmpty()) {
+        if (dueCardsRemaining.isEmpty()) {
             reviewingMistakes = true;
-            if (incorrectDeck.isEmpty()) {
+            if (incorrectPile.isEmpty()) {
                 deck.save();
                 parent.setVisible(true);
                 dispose();
             } else {
-                cardsBeingStudied.addAll(incorrectDeck);
-                incorrectDeck.clear();
-                currentCard = cardsBeingStudied.remove(cardsBeingStudied.size() - 1);
+                dueCardsRemaining.addAll(incorrectPile);
+                incorrectPile.clear();
+                currentCard = dueCardsRemaining.remove(dueCardsRemaining.size() - 1);
             }
         } else {
-            currentCard = cardsBeingStudied.remove(cardsBeingStudied.size() - 1);
+            currentCard = dueCardsRemaining.remove(dueCardsRemaining.size() - 1);
         }
         Boolean gender = currentCard.getGender();
         if (!showGender || gender == FlashCard.NONE) {
