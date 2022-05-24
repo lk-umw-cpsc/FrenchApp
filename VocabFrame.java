@@ -111,9 +111,9 @@ public class VocabFrame extends JFrame implements WindowListener {
             sideChoice.add(showBoth);
             showEnglish.setSelected(true);
 
-            buttonToModeMap.put(showEnglish, FlashCardStudyMode.ENGLISH);
-            buttonToModeMap.put(showFrench, FlashCardStudyMode.ENGLISH);
-            buttonToModeMap.put(showBoth, FlashCardStudyMode.RANDOM);
+            buttonToModeMap.put(showEnglish, FlashCardStudyMode.SHOW_ENGLISH);
+            buttonToModeMap.put(showFrench, FlashCardStudyMode.SHOW_ENGLISH);
+            buttonToModeMap.put(showBoth, FlashCardStudyMode.SHOW_RANDOM);
         optionsPane.add(layer);
 
         optionsPane.add(Box.createHorizontalStrut(PADDING));
@@ -187,11 +187,11 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     private void startButtonPressed(ActionEvent e) {
         if (showEnglish.isSelected()) {
-            mode = FlashCardStudyMode.ENGLISH;
+            mode = FlashCardStudyMode.SHOW_ENGLISH;
         } else if(showFrench.isSelected()) {
-            mode = FlashCardStudyMode.FRENCH;
+            mode = FlashCardStudyMode.SHOW_FRENCH;
         } else {
-            mode = FlashCardStudyMode.RANDOM;
+            mode = FlashCardStudyMode.SHOW_RANDOM;
         }
         showGender = showGenderHintsOption.isSelected();
         pullCard();
@@ -277,13 +277,13 @@ public class VocabFrame extends JFrame implements WindowListener {
         }
         // flip coin?
         switch (mode) {
-            case ENGLISH:
+            case SHOW_ENGLISH:
                 sideShownIsFrench = false;
                 break;
-            case FRENCH:
+            case SHOW_FRENCH:
                 sideShownIsFrench = true;
                 break;
-            case RANDOM:
+            case SHOW_RANDOM:
                 sideShownIsFrench = rng.nextBoolean();
         }
         if (sideShownIsFrench) {

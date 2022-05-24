@@ -1,3 +1,3 @@
 public enum FlashCardStudyMode {
-    ENGLISH, FRENCH, RANDOM
+    SHOW_ENGLISH, SHOW_FRENCH, SHOW_RANDOM
 }
