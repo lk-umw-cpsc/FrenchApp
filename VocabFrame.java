@@ -75,7 +75,7 @@ public class VocabFrame extends JFrame implements WindowListener {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);
 
-        cardsBeingStudied = deck.getAllDueCards();
+        cardsBeingStudied = deck.getDueCards();
         if (cardsBeingStudied.isEmpty()) {
             cardsBeingStudied.addAll(deck.getCards());
         }

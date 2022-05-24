@@ -62,7 +62,7 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
         } else {
             deck = new Deck(file);
             desc = deck.getDescription();
-            if (!deck.getAllDueCards().isEmpty()) {
+            if (!deck.getDueCards().isEmpty()) {
                 containsDueCards = true;
             }
         }
@@ -77,7 +77,7 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
     }
 
     public void updateDueness() {
-        dueIcon.setVisible(!deck.getAllDueCards().isEmpty());
+        dueIcon.setVisible(!deck.getDueCards().isEmpty());
     }
 
     @Override

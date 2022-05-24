@@ -70,7 +70,7 @@ public class Deck {
         }
     }
 
-    public List<FlashCard> getAllDueCards() {
+    public List<FlashCard> getDueCards() {
         List<FlashCard> due = new ArrayList<>(cards.size());
         for (FlashCard c : cards) {
             if (c.isDue()) {
