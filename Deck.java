@@ -70,6 +70,12 @@ public class Deck {
         }
     }
 
+    public void resetDueDates() {
+        for (FlashCard c : cards) {
+            c.setDueInDays(0);
+        }
+    }
+
     public List<FlashCard> getDueCards() {
         List<FlashCard> due = new ArrayList<>(cards.size());
         for (FlashCard c : cards) {

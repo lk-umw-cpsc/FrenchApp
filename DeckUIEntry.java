@@ -1,3 +1,4 @@
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -10,7 +11,9 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 
 public class DeckUIEntry extends JPanel implements MouseListener, Comparable<DeckUIEntry> {
@@ -22,6 +25,7 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
     private int order;
     private Deck deck;
     private JLabel dueIcon;
+    private final JPopupMenu rightClickMenu;
     
     public DeckUIEntry(DeckChooserFrame parent, File file) {
         this.parent = parent;
@@ -74,6 +78,17 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
         dueIcon.setVisible(containsDueCards);
 
         add(Box.createHorizontalGlue());
+
+        rightClickMenu = new JPopupMenu();
+        JMenuItem resetOption = new JMenuItem("Reset due dates");
+        resetOption.addActionListener(this::resetDueDates);
+        rightClickMenu.add(resetOption);
+    }
+
+    private void resetDueDates(ActionEvent e) {
+        deck.resetDueDates();
+        dueIcon.setVisible(true);
+        revalidate();
     }
 
     public void updateDueness() {
@@ -88,6 +103,8 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
             } else {
                 parent.deckSelected(this, deck);
             }
+        } else if(e.getButton() == MouseEvent.BUTTON3) {
+            rightClickMenu.show(this, e.getX(), e.getY());
         }
     }
 
