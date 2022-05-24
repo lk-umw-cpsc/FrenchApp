@@ -5,21 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -57,7 +48,6 @@ public class VocabFrame extends JFrame implements WindowListener {
     private boolean sideShownIsFrench;
     private List<FlashCard> cardsBeingStudied;
     private List<FlashCard> incorrectDeck;
-    private List<FlashCard> allCards;
     private FlashCard currentCard;
 
     private Box optionsPane;
@@ -74,72 +64,21 @@ public class VocabFrame extends JFrame implements WindowListener {
     private Mode mode;
     private Map<JRadioButton, Mode> buttonToModeMap = new HashMap<>();
 
-    private final File deckFile;
-    private String deckDescription;
+    private Deck deck;
     
-    public VocabFrame(File f) {
-        super("Vocab");
+    public VocabFrame(Deck deck) {
+        super("Pratiquer " + deck.getDescription());
+        this.deck = deck;
+
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);
 
-        deckFile = f;
-
-        allCards = new ArrayList<>();
-        cardsBeingStudied = new ArrayList<>();
+        cardsBeingStudied = deck.getAllDueCards();
+        if (cardsBeingStudied.isEmpty()) {
+            cardsBeingStudied.addAll(deck.getCards());
+        }
+        Collections.shuffle(cardsBeingStudied);
         incorrectDeck = new ArrayList<>();
-        try (Scanner s = new Scanner(f, "UTF-8")) {
-            deckDescription = s.nextLine();
-            setTitle("Pratiquer " + deckDescription);
-            int lineNumber = 1;
-            String line = "";
-            try {
-                while (s.hasNextLine()) {
-                    line = s.nextLine().strip();;
-                    String[] stringAndDueDate = line.split(" @ ");
-                    String string = stringAndDueDate[0];
-                    LocalDate dueDate = null;
-                    if (stringAndDueDate.length > 1) {
-                        try {
-                            dueDate = LocalDate.parse(stringAndDueDate[1]);
-                        } catch (DateTimeParseException e) {
-                            System.out.println("Invalid due date for following card:");
-                            System.out.println(line);
-                        }
-                    }
-                    String[] pieces = string.split(" \\| ");
-                    String[] englishAnswers = pieces[1].split(",");
-                    for (int i = 0; i < englishAnswers.length; i++) {
-                        englishAnswers[i] = englishAnswers[i].strip();
-                    }
-                    String[] frenchAnswers = pieces[0].split(",");
-                    for (int i = 0; i < frenchAnswers.length; i++) {
-                        frenchAnswers[i] = frenchAnswers[i].strip();
-                    }
-                    Boolean gender = null;
-                    char genderChar = pieces[2].strip().charAt(0);
-                    if (genderChar == 'm') {
-                        gender = FlashCard.MALE;
-                    } else if(genderChar == 'f') {
-                        gender = FlashCard.FEMALE;
-                    }
-                    FlashCard card = new FlashCard(string, dueDate, englishAnswers, frenchAnswers, gender);
-                    allCards.add(card);
-                    if (card.isDue()) {
-                        cardsBeingStudied.add(card);
-                    }
-                    lineNumber++;
-                }
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("Fatal error reading line " + lineNumber + " of " + f + ":");
-                System.out.println(line);
-                System.out.println("Incorrect number of arguments on this line");
-                System.exit(0);
-            }
-            if (cardsBeingStudied.isEmpty()) {
-                cardsBeingStudied.addAll(allCards);
-            }
-            Collections.shuffle(cardsBeingStudied);
-        } catch (FileNotFoundException e) {}
     }
 
     public void createAndShow(JFrame parent) {
@@ -312,7 +251,7 @@ public class VocabFrame extends JFrame implements WindowListener {
     private void pullCard() {
         if (cardsBeingStudied.isEmpty()) {
             if (incorrectDeck.isEmpty()) {
-                saveDeck();
+                deck.save();
                 parent.setVisible(true);
                 dispose();
             } else {
@@ -351,22 +290,9 @@ public class VocabFrame extends JFrame implements WindowListener {
         answerField.setEnabled(true);
     }
 
-    /**
-     * Saves the current deck's cards, updating their
-     * due dates
-     */
-    private void saveDeck() {
-        try (PrintWriter out = new PrintWriter(deckFile)) {
-            out.println(deckDescription);
-            for (FlashCard c : allCards) {
-                out.println(c.getDeckFileString());
-            }
-        } catch (IOException e) {}
-    }
-
     @Override
     public void windowClosing(WindowEvent e) {
-        saveDeck();
+        deck.save();
         if (parent != null) {
             parent.setVisible(true);
         }

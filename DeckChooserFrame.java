@@ -17,6 +17,8 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
     private Box entryContainer;
 
     private JFrame parent;
+
+    private DeckUIEntry pickedDeckUIEntry;
     
     public DeckChooserFrame(JFrame parent) {
         this.parent = parent;
@@ -60,10 +62,19 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         repaint();
     }
 
-    public void deckSelected(File deck) {
+    public void deckSelected(DeckUIEntry caller, Deck deck) {
+        pickedDeckUIEntry = caller;
         VocabFrame vf = new VocabFrame(deck);
         vf.createAndShow(this);
         setVisible(false);
+    }
+
+    @Override
+    public void setVisible(boolean visibility) {
+        if (visibility && pickedDeckUIEntry != null) {
+            pickedDeckUIEntry.updateDueness();
+        }
+        super.setVisible(visibility);
     }
 
     @Override

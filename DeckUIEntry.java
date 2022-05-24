@@ -20,6 +20,8 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
     private DeckChooserFrame parent;
     private File file;
     private int order;
+    private Deck deck;
+    private JLabel dueIcon;
     
     public DeckUIEntry(DeckChooserFrame parent, File file) {
         this.parent = parent;
@@ -40,24 +42,42 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
             iconLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
             add(iconLabel);
         }
+        boolean containsDueCards = false;
         String desc = "..";
-        if (isFolder && !file.getName().equals("decks")) {
-            desc = file.getName();
-            File descriptionFile = new File(file.getAbsolutePath() + "/.description");
-            if (descriptionFile.exists()) {
-                try (Scanner in = new Scanner(descriptionFile, "UTF-8")) {
-                    desc = in.nextLine();
-                    order = in.nextInt();
-                } catch (FileNotFoundException e) {
+        if (isFolder) {
+            if (file.getName().equals("decks")) {
+                
+            } else {
+                desc = file.getName();
+                File descriptionFile = new File(file.getAbsolutePath() + "/.description");
+                if (descriptionFile.exists()) {
+                    try (Scanner in = new Scanner(descriptionFile, "UTF-8")) {
+                        desc = in.nextLine();
+                        order = in.nextInt();
+                    } catch (FileNotFoundException e) {
+                        
+                    }
                 }
             }
         } else {
-            try (Scanner in = new Scanner(file, "UTF-8")) {
-                desc = in.nextLine();
-            } catch (FileNotFoundException e) {}
+            deck = new Deck(file);
+            desc = deck.getDescription();
+            if (!deck.getAllDueCards().isEmpty()) {
+                containsDueCards = true;
+            }
         }
         add(new JLabel(desc));
+        dueIcon = new JLabel(IconManager.get("due.png"));
+        dueIcon.setBorder(new EmptyBorder(16, 8, 16, 8));
+        dueIcon.setToolTipText("Cards are due for study");
+        add(dueIcon);
+        dueIcon.setVisible(containsDueCards);
+
         add(Box.createHorizontalGlue());
+    }
+
+    public void updateDueness() {
+        dueIcon.setVisible(!deck.getAllDueCards().isEmpty());
     }
 
     @Override
@@ -66,7 +86,7 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
             if (isFolder) {
                 parent.folderSelected(file);
             } else {
-                parent.deckSelected(file);
+                parent.deckSelected(this, deck);
             }
         }
     }
