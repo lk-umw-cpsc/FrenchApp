@@ -61,8 +61,8 @@ public class VocabFrame extends JFrame implements WindowListener {
     private JCheckBox showGenderHintsOption;
 
     private boolean showGender;
-    private Mode mode;
-    private Map<JRadioButton, Mode> buttonToModeMap = new HashMap<>();
+    private FlashCardStudyMode mode;
+    private Map<JRadioButton, FlashCardStudyMode> buttonToModeMap = new HashMap<>();
 
     private boolean reviewingMistakes;
 
@@ -111,9 +111,9 @@ public class VocabFrame extends JFrame implements WindowListener {
             sideChoice.add(showBoth);
             showEnglish.setSelected(true);
 
-            buttonToModeMap.put(showEnglish, Mode.ENGLISH);
-            buttonToModeMap.put(showFrench, Mode.ENGLISH);
-            buttonToModeMap.put(showBoth, Mode.RANDOM);
+            buttonToModeMap.put(showEnglish, FlashCardStudyMode.ENGLISH);
+            buttonToModeMap.put(showFrench, FlashCardStudyMode.ENGLISH);
+            buttonToModeMap.put(showBoth, FlashCardStudyMode.RANDOM);
         optionsPane.add(layer);
 
         optionsPane.add(Box.createHorizontalStrut(PADDING));
@@ -187,11 +187,11 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     private void startButtonPressed(ActionEvent e) {
         if (showEnglish.isSelected()) {
-            mode = Mode.ENGLISH;
+            mode = FlashCardStudyMode.ENGLISH;
         } else if(showFrench.isSelected()) {
-            mode = Mode.FRENCH;
+            mode = FlashCardStudyMode.FRENCH;
         } else {
-            mode = Mode.RANDOM;
+            mode = FlashCardStudyMode.RANDOM;
         }
         showGender = showGenderHintsOption.isSelected();
         pullCard();
