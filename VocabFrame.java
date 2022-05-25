@@ -30,12 +30,12 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     private static final int PADDING = 16;
 
-    private static final Color CORRECT_ANSWER_COLOR = new Color(0, 200, 0);
-    private static final Color INCORRECT_ANSWER_COLOR = new Color(200, 0, 0);
+    private static final String CORRECT_ANSWER_COLOR = "#00c800";
+    private static final String INCORRECT_ANSWER_COLOR = "#c80000";
 
-    private static final Color COLOR_GENDER_NEUTRAL = Color.BLACK;
-    private static final Color COLOR_MASCULINE = new Color(10, 0, 194);
-    private static final Color COLOR_FEMININE = new Color(204, 0, 139);
+    private static final String COLOR_GENDER_NEUTRAL = "#000000";
+    private static final String COLOR_MASCULINE = "#0a00c2";
+    private static final String COLOR_FEMININE = "#cc00c2";
 
     private static final int CHARACTER_COUNT_CUTOFF = 28;
 
@@ -44,7 +44,6 @@ public class VocabFrame extends JFrame implements WindowListener {
     private JFrame parent;
 
     private JLabel flashcardLabel;
-    private JLabel answerLabel;
     private JTextField answerField;
 
     private boolean sideShownIsFrench;
@@ -164,14 +163,6 @@ public class VocabFrame extends JFrame implements WindowListener {
             textContainer.add(flashcardTextContainer);
 
             textContainer.add(Box.createVerticalStrut(16));
-
-            Box answerTextContainer = Box.createHorizontalBox();
-            answerTextContainer.add(Box.createHorizontalGlue());
-            answerLabel = new JLabel();
-            answerLabel.setFont(new Font("Helvetica", 0, 48));
-            answerTextContainer.add(answerLabel);
-            answerTextContainer.add(Box.createHorizontalGlue());
-            // textContainer.add(answerTextContainer);
             
             flashcard.add(textContainer);
 
@@ -228,20 +219,10 @@ public class VocabFrame extends JFrame implements WindowListener {
         String answerText;
         if (currentCard.checkAnswer(sideShownIsFrench, input)) {
             answerText = input;
-            color = "green";
-            answerLabel.setText(input);
-            answerLabel.setForeground(CORRECT_ANSWER_COLOR);
-            if (!reviewingMistakes) {
-                currentCard.updateDueDate(true);
-            }
+            color = CORRECT_ANSWER_COLOR;
         } else {
-            color = "red";
+            color = INCORRECT_ANSWER_COLOR;
             answerText = answer;
-            answerLabel.setForeground(INCORRECT_ANSWER_COLOR);
-            // answerLabel.setText("<html><body style='text-align: center'>" + answer + "</body></html>");
-            // flashcardLabel.setText("<html><body style='text-align: center'>" 
-                    // + promptText + + "<br><font color='" + + "'>" +  + "</font></body></html>");
-            
             incorrectPile.add(currentCard);
             currentCard.updateDueDate(false);
         }
@@ -282,15 +263,13 @@ public class VocabFrame extends JFrame implements WindowListener {
             currentCard = dueCardsRemaining.remove(dueCardsRemaining.size() - 1);
         }
         Boolean gender = currentCard.getGender();
-        String color = "black";
+        String color = COLOR_GENDER_NEUTRAL;
         if (!showGender || gender == FlashCard.NONE) {
-            flashcardLabel.setForeground(COLOR_GENDER_NEUTRAL);
+            // flashcardLabel.setForeground(COLOR_GENDER_NEUTRAL);
         } else if (gender == FlashCard.MALE) {
-            flashcardLabel.setForeground(COLOR_MASCULINE);
-            color = "#0a00c2";
+            color = COLOR_MASCULINE;
         } else {
-            flashcardLabel.setForeground(COLOR_FEMININE);
-            color = "#cc00c2";
+            color = COLOR_FEMININE;
         }
         // flip coin?
         switch (mode) {
@@ -312,7 +291,6 @@ public class VocabFrame extends JFrame implements WindowListener {
         promptText = "<font color='" + color + "'>";
         promptText += insertLineBreaks(text) + "</font>";
         flashcardLabel.setText("<html><body style='text-align: center'>" + promptText + "</body></html>");
-        // answerLabel.setText("");
         answerField.setEnabled(true);
     }
 
