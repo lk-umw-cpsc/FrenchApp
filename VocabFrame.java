@@ -220,6 +220,9 @@ public class VocabFrame extends JFrame implements WindowListener {
         if (currentCard.checkAnswer(sideShownIsFrench, input)) {
             answerText = input;
             color = CORRECT_ANSWER_COLOR;
+            if (!reviewingMistakes) {
+                currentCard.updateDueDate(true);
+            }
         } else {
             color = INCORRECT_ANSWER_COLOR;
             answerText = answer;
