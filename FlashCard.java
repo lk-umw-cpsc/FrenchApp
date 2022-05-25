@@ -6,6 +6,10 @@ public class FlashCard {
     private static final int STUDY_INTERVAL_CORRECT = 7;
     private static final int STUDY_INTERVAL_INCORRECT = 1;
 
+    public static final int ANSWER_CORRECT = 0;
+    public static final int ANSWER_INCORRECT = 1;
+    public static final int ANSWER_REVIEWED = 2;
+
     public static final boolean MALE = false;
     public static final boolean FEMALE = true;
     public static final Boolean NONE = null;
@@ -99,11 +103,13 @@ public class FlashCard {
         return deckFileString;
     }
 
-    public void updateDueDate(boolean userWasCorrect) {
-        if (userWasCorrect) {
+    public void updateDueDate(int correctIncorrectOrReviewed) {
+        if (correctIncorrectOrReviewed == ANSWER_CORRECT) {
             setDueInDays(STUDY_INTERVAL_CORRECT);
-        } else {
+        } else if (correctIncorrectOrReviewed == ANSWER_INCORRECT) {
             setDueInDays(STUDY_INTERVAL_INCORRECT);
+        } else {
+            setDueInDays(0);
         }
     }
 
