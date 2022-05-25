@@ -1,27 +1,27 @@
 les temps et la météo
 Quelle température fait-il? | What's the temperature? | f
-Il fait 20 degrés. | It's 20 degrees Celsius. | m
+Il fait 20 degrés. | It's 20 degrees Celsius. | m @ 2022-05-26
 Quel temps fait-il? | What's the weather like? | m
-Il fait beau. | It's nice out. | m
-Il fait chaud. | It's hot. | m
-Il fait frais. | It's cool., It's chilly. | m
-Il fait froid. | It's cold. | m
+Il fait beau. | It's nice out. | m @ 2022-06-01
+Il fait chaud. | It's hot. | m @ 2022-06-01
+Il fait frais. | It's cool., It's chilly. | m @ 2022-06-01
+Il fait froid. | It's cold. | m @ 2022-06-01
 Il fait gris. | It's dreary. | m
 Il fait lourd. | It's hot and muggy. | m
-Il fait mauvais. | It's nasty out., The weather is bad. | m
+Il fait mauvais. | It's nasty out., The weather is bad. | m @ 2022-06-01
 Il fait soleil., Il fait du soleil. | It's sunny. | m
-Il fait du vent. | It's windy. | m
+Il fait du vent. | It's windy. | m @ 2022-06-01
 Il neige. | It's snowing. | m
 Il pleut. | It's raining. | m
 Le ciel est couvert. | It's cloudy. | m
 l'étoile | the star | f
 la lune | the moon | f
-la météo | the forecast | f
+la météo | the forecast | f @ 2022-06-01
 la neige | the snow | f
-les nuages | the clouds | m
-la pluie | the rain | f
+les nuages | the clouds | m @ 2022-06-01
+la pluie | the rain | f @ 2022-05-26
 le soleil | the sun | m
-la tornade | the tornado | f
+la tornade | the tornado | f @ 2022-06-01
 annoncer | to forecase | n
 pour | for | n
 Quelle est la date?, Quelle est la date aujourd'hui? | What's the date?, What's today's date? | f
@@ -30,4 +30,4 @@ C'est le 10 novembre., On est le 10 novembre., Nous sommes le 10 novembre. | It'
 C'est quand ton anniversaire?, C'est quand votre anniversaire? | When is your birthday?, When's your birthday? | m
 C'est quand l'anniversaire de Lauren? | When is Lauren's birthday? | m
 depuis combien de temps | for how long | n
-la date | the date | f
+la date | the date | f @ 2022-06-01
