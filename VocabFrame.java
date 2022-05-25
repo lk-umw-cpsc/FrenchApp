@@ -28,7 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 public class VocabFrame extends JFrame implements WindowListener {
 
-    private static final int PADDING = 16;
+    private static final int CONTENT_PANE_PADDING = 16;
 
     private static final String CORRECT_ANSWER_COLOR = "#00c800";
     private static final String INCORRECT_ANSWER_COLOR = "#c80000";
@@ -93,7 +93,7 @@ public class VocabFrame extends JFrame implements WindowListener {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         optionsPane = Box.createVerticalBox();
-        optionsPane.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
+        optionsPane.setBorder(new EmptyBorder(CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING));
 
         Box layer = Box.createHorizontalBox();
             layer.add(new JLabel("Show side:"));
@@ -119,7 +119,7 @@ public class VocabFrame extends JFrame implements WindowListener {
             buttonToModeMap.put(showBoth, FlashCardStudyMode.SHOW_RANDOM);
         optionsPane.add(layer);
 
-        optionsPane.add(Box.createHorizontalStrut(PADDING));
+        optionsPane.add(Box.createHorizontalStrut(CONTENT_PANE_PADDING));
 
         layer = Box.createHorizontalBox();
             layer.add(new JLabel("Additonal options:"));
@@ -143,7 +143,7 @@ public class VocabFrame extends JFrame implements WindowListener {
 
         flashcardsPane = Box.createVerticalBox();
 
-        flashcardsPane.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
+        flashcardsPane.setBorder(new EmptyBorder(CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING));
 
             JPanel flashcard = new JPanel();
             flashcard.setPreferredSize(new Dimension(600, 300));
