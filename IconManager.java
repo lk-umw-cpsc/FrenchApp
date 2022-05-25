@@ -1,9 +1,11 @@
 import java.io.File;
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+
 import javax.swing.ImageIcon;
 
 public class IconManager {
