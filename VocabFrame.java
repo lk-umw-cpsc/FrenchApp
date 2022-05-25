@@ -112,7 +112,7 @@ public class VocabFrame extends JFrame implements WindowListener {
             showEnglish.setSelected(true);
 
             buttonToModeMap.put(showEnglish, FlashCardStudyMode.SHOW_ENGLISH);
-            buttonToModeMap.put(showFrench, FlashCardStudyMode.SHOW_ENGLISH);
+            buttonToModeMap.put(showFrench, FlashCardStudyMode.SHOW_FRENCH);
             buttonToModeMap.put(showBoth, FlashCardStudyMode.SHOW_RANDOM);
         optionsPane.add(layer);
 
