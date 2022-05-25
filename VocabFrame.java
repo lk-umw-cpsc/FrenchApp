@@ -202,7 +202,7 @@ public class VocabFrame extends JFrame implements WindowListener {
     }
 
     /**
-     * Method called when the user pressed Enter/Return to submit
+     * Method called when the user presses Enter/Return to submit
      * their answer for the current flash card.
      * 
      * The correct answer is displayed below the flash card's text,
