@@ -3,8 +3,11 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -18,6 +21,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     
     private final JFrame parent;
 
+    private final Random rng;
+
     private JTextField jeField;
     private JTextField tuField;
     private JTextField ilElleOnField;
@@ -25,14 +30,21 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     private JTextField vousField;
     private JTextField ilsEllesField;
 
+    private JButton checkButton;
+
     private Verb answer;
 
     private final Color CORRECT_ANSWER_COLOR = new Color(198, 255, 189);
     private final Color INCORRECT_ANSWER_COLOR = new Color(255, 189, 189);
+    private final Color DEFAULT_COLOR;
+
+    private List<Verb> remainingVerbs;
 
     public ConjugationFrame(JFrame parent) {
         super("Pratiquer les conjugaisons");
         this.parent = parent;
+
+        rng = new Random();
 
         Map<String, String> conjugations = new HashMap<>();
         conjugations.put("je", "mange");
@@ -42,6 +54,9 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         conjugations.put("vous", "mangez");
         conjugations.put("ils/elles", "mangent");
         answer = new Verb("manger", conjugations);
+
+        remainingVerbs = new ArrayList<>();
+        remainingVerbs.add(answer);
 
         if (parent != null) {
             setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -91,7 +106,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         rowContainer.add(row);
 
         row = Box.createHorizontalBox();
-            JButton checkButton = new JButton("Check");
+            checkButton = new JButton("Check");
             checkButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
             checkButton.addActionListener(this::formSubmitted);
             row.add(checkButton);
@@ -108,6 +123,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         nousField.addActionListener(this::formSubmitted);
         vousField.addActionListener(this::formSubmitted);
         ilsEllesField.addActionListener(this::formSubmitted);
+
+        DEFAULT_COLOR = jeField.getBackground();
 
         add(rowContainer);
 
@@ -165,6 +182,41 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             ilsEllesField.setBackground(INCORRECT_ANSWER_COLOR);
             correct = false;
         }
+
+        if (correct) {
+            checkButton.setEnabled(false);
+            new Thread(this::pickNextVerb).start();
+        }
+    }
+
+    private void pickNextVerb() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {}
+        if (remainingVerbs.isEmpty()) {
+            dispose();
+        } else {
+            answer = remainingVerbs.remove(rng.nextInt(remainingVerbs.size()));
+            SwingUtilities.invokeLater(this::updateFormWithNextVerb);
+        }
+    }
+
+    private void updateFormWithNextVerb() {
+        // finish this...
+        resetField(jeField);
+        resetField(tuField);
+        resetField(ilElleOnField);
+        resetField(nousField);
+        resetField(vousField);
+        resetField(ilsEllesField);
+
+        checkButton.setEnabled(true);
+    }
+
+    private void resetField(JTextField field) {
+        field.setBackground(DEFAULT_COLOR);
+        field.setText("");
+        field.setEnabled(true);
     }
 
     public static void main(String[] args) {
