@@ -79,11 +79,13 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             //row.add(test = new JLabel("<html><body style='text-align: center'>Conjugate <i>manger</i></body></html>"));
             // test.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
             row.add(new JLabel("Conjugate "));
-            infinitiveLabel = new JLabel("manger");
+            infinitiveLabel = new JLabel("manger ");
             infinitiveLabel.setFont(infinitiveLabel.getFont().deriveFont(Font.ITALIC));
             row.add(infinitiveLabel);
             row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
+
+        rowContainer.add(Box.createVerticalStrut(8));
 
         row = Box.createHorizontalBox();
             row.add(new JLabel("je/j' "));
@@ -218,6 +220,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         resetField(ilsEllesField);
 
         checkButton.setEnabled(true);
+        jeField.requestFocus();
     }
 
     private void resetField(JTextField field) {
