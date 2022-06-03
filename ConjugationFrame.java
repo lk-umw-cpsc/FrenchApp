@@ -1,7 +1,13 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -12,15 +18,37 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     
     private final JFrame parent;
 
+    private JTextField jeField;
+    private JTextField tuField;
+    private JTextField ilElleOnField;
+    private JTextField nousField;
+    private JTextField vousField;
+    private JTextField ilsEllesField;
+
+    private Verb answer;
+
+    private final Color CORRECT_ANSWER_COLOR = new Color(198, 255, 189);
+    private final Color INCORRECT_ANSWER_COLOR = new Color(255, 189, 189);
+
     public ConjugationFrame(JFrame parent) {
         super("Pratiquer les conjugaisons");
         this.parent = parent;
+
+        Map<String, String> conjugations = new HashMap<>();
+        conjugations.put("je", "mange");
+        conjugations.put("tu", "manges");
+        conjugations.put("il/elle/on", "mange");
+        conjugations.put("nous", "mangeons");
+        conjugations.put("vous", "mangez");
+        conjugations.put("ils/elles", "mangent");
+        answer = new Verb("manger", conjugations);
 
         if (parent != null) {
             setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         } else {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
+        setResizable(false);
 
         Box rowContainer = Box.createVerticalBox();
         rowContainer.setBorder(new EmptyBorder(16, 16, 16, 16));
@@ -29,41 +57,114 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         
         row = Box.createHorizontalBox();
             // row.add(Box.createHorizontalGlue());
-            row.add(new JLabel("<html><body style='text-align: center'>Conjugate <i>manger</i></body></html>"));
+            JLabel test;
+            row.add(test = new JLabel("<html><body style='text-align: center'>Conjugate <i>manger</i></body></html>"));
+            // test.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
             // row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
 
         row = Box.createHorizontalBox();
-            row.add(new JLabel("je "));
-            row.add(new JTextField(8));
+            row.add(new JLabel("je/j' "));
+            row.add(jeField = new JTextField(8));
             row.add(Box.createHorizontalGlue());
             row.add(Box.createHorizontalStrut(32));
             row.add(new JLabel("nous "));
-            row.add(new JTextField(8));
+            row.add(nousField = new JTextField(8));
         rowContainer.add(row);
 
         row = Box.createHorizontalBox();
             row.add(new JLabel("tu "));
-            row.add(new JTextField(8));
+            row.add(tuField = new JTextField(8));
             row.add(Box.createHorizontalGlue());
             row.add(Box.createHorizontalStrut(32));
             row.add(new JLabel("vous "));
-            row.add(new JTextField(8));
+            row.add(vousField = new JTextField(8));
         rowContainer.add(row);
 
         row = Box.createHorizontalBox();
             row.add(new JLabel("il/elle/on "));
-            row.add(new JTextField(8));
+            row.add(ilElleOnField = new JTextField(8));
             row.add(Box.createHorizontalGlue());
             row.add(Box.createHorizontalStrut(32));
             row.add(new JLabel("ils/elles "));
-            row.add(new JTextField(8));
+            row.add(ilsEllesField = new JTextField(8));
         rowContainer.add(row);
+
+        row = Box.createHorizontalBox();
+            JButton checkButton = new JButton("Check");
+            checkButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            checkButton.addActionListener(this::formSubmitted);
+            row.add(checkButton);
+        rowContainer.add(row);
+
+        setFocusTraversalPolicy(new BasicTraversalPolicy(
+            jeField, tuField, ilElleOnField, nousField, 
+            vousField, ilsEllesField, checkButton
+        ));
+
+        jeField.addActionListener(this::formSubmitted);
+        tuField.addActionListener(this::formSubmitted);
+        ilElleOnField.addActionListener(this::formSubmitted);
+        nousField.addActionListener(this::formSubmitted);
+        vousField.addActionListener(this::formSubmitted);
+        ilsEllesField.addActionListener(this::formSubmitted);
 
         add(rowContainer);
 
         pack();
         setLocationRelativeTo(parent);
+    }
+
+    private void formSubmitted(ActionEvent e) {
+        boolean correct = true;
+
+        if (jeField.getText().equals(answer.getConjugation("je"))) {
+            jeField.setBackground(CORRECT_ANSWER_COLOR);
+            jeField.setEnabled(false);
+        } else {
+            jeField.setBackground(INCORRECT_ANSWER_COLOR);
+            correct = false;
+        }
+
+        if (tuField.getText().equals(answer.getConjugation("tu"))) {
+            tuField.setBackground(CORRECT_ANSWER_COLOR);
+            tuField.setEnabled(false);
+        } else {
+            tuField.setBackground(INCORRECT_ANSWER_COLOR);
+            correct = false;
+        }
+
+        if (ilElleOnField.getText().equals(answer.getConjugation("il/elle/on"))) {
+            ilElleOnField.setBackground(CORRECT_ANSWER_COLOR);
+            ilElleOnField.setEnabled(false);
+        } else {
+            ilElleOnField.setBackground(INCORRECT_ANSWER_COLOR);
+            correct = false;
+        }
+
+        if (nousField.getText().equals(answer.getConjugation("nous"))) {
+            nousField.setBackground(CORRECT_ANSWER_COLOR);
+            nousField.setEnabled(false);
+        } else {
+            nousField.setBackground(INCORRECT_ANSWER_COLOR);
+            correct = false;
+        }
+
+        if (vousField.getText().equals(answer.getConjugation("vous"))) {
+            vousField.setBackground(CORRECT_ANSWER_COLOR);
+            vousField.setEnabled(false);
+        } else {
+            vousField.setBackground(INCORRECT_ANSWER_COLOR);
+            correct = false;
+        }
+
+        if (ilsEllesField.getText().equals(answer.getConjugation("ils/elles"))) {
+            ilsEllesField.setBackground(CORRECT_ANSWER_COLOR);
+            ilsEllesField.setEnabled(false);
+        } else {
+            ilsEllesField.setBackground(INCORRECT_ANSWER_COLOR);
+            correct = false;
+        }
     }
 
     public static void main(String[] args) {
