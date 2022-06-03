@@ -212,7 +212,6 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     }
 
     private void updateFormWithNextVerb() {
-        // finish this...
         resetField(jeField);
         resetField(tuField);
         resetField(ilElleOnField);
