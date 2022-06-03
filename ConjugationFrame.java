@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -22,6 +23,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     private final JFrame parent;
 
     private final Random rng;
+
+    private JLabel infinitiveLabel;
 
     private JTextField jeField;
     private JTextField tuField;
@@ -71,11 +74,15 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         Box row;
         
         row = Box.createHorizontalBox();
-            // row.add(Box.createHorizontalGlue());
-            JLabel test;
-            row.add(test = new JLabel("<html><body style='text-align: center'>Conjugate <i>manger</i></body></html>"));
+            row.add(Box.createHorizontalGlue());
+            //JLabel test;
+            //row.add(test = new JLabel("<html><body style='text-align: center'>Conjugate <i>manger</i></body></html>"));
             // test.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-            // row.add(Box.createHorizontalGlue());
+            row.add(new JLabel("Conjugate "));
+            infinitiveLabel = new JLabel("manger");
+            infinitiveLabel.setFont(infinitiveLabel.getFont().deriveFont(Font.ITALIC));
+            row.add(infinitiveLabel);
+            row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
 
         row = Box.createHorizontalBox();
