@@ -99,7 +99,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             row.add(nousField = new JTextField(8));
         rowContainer.add(row);
 
-        rowContainer.add(Box.createVerticalStrut(4));
+        // rowContainer.add(Box.createVerticalStrut(4));
 
         row = Box.createHorizontalBox();
             row.add(new JLabel("tu "));
@@ -110,7 +110,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             row.add(vousField = new JTextField(8));
         rowContainer.add(row);
 
-        rowContainer.add(Box.createVerticalStrut(4));
+        // rowContainer.add(Box.createVerticalStrut(4));
 
         row = Box.createHorizontalBox();
             row.add(new JLabel("il/elle/on "));
@@ -141,6 +141,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         nousField.addActionListener(this::formSubmitted);
         vousField.addActionListener(this::formSubmitted);
         ilsEllesField.addActionListener(this::formSubmitted);
+
+        infinitiveLabel.setText(answer.getInfinitive() + " ");
 
         DEFAULT_COLOR = jeField.getBackground();
 
@@ -220,6 +222,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     }
 
     private void updateFormWithNextVerb() {
+        infinitiveLabel.setText(answer.getInfinitive());
+        
         resetField(jeField);
         resetField(tuField);
         resetField(ilElleOnField);
