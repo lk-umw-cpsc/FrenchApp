@@ -17,6 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 public class ConjugationFrame extends JFrame implements WindowListener {
@@ -70,7 +72,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         setResizable(false);
 
         Box rowContainer = Box.createVerticalBox();
-        rowContainer.setBorder(new EmptyBorder(16, 16, 16, 16));
+        rowContainer.setBorder(new EmptyBorder(16, 16, 8, 16));
         
         Box row;
         
@@ -79,7 +81,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             //JLabel test;
             //row.add(test = new JLabel("<html><body style='text-align: center'>Conjugate <i>manger</i></body></html>"));
             // test.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-            row.add(new JLabel("Conjugate "));
+            row.add(new JLabel(" Conjugate "));
             infinitiveLabel = new JLabel("manger ");
             infinitiveLabel.setFont(infinitiveLabel.getFont().deriveFont(Font.ITALIC));
             row.add(infinitiveLabel);
@@ -97,6 +99,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             row.add(nousField = new JTextField(8));
         rowContainer.add(row);
 
+        rowContainer.add(Box.createVerticalStrut(4));
+
         row = Box.createHorizontalBox();
             row.add(new JLabel("tu "));
             row.add(tuField = new JTextField(8));
@@ -106,6 +110,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             row.add(vousField = new JTextField(8));
         rowContainer.add(row);
 
+        rowContainer.add(Box.createVerticalStrut(4));
+
         row = Box.createHorizontalBox();
             row.add(new JLabel("il/elle/on "));
             row.add(ilElleOnField = new JTextField(8));
@@ -114,6 +120,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             row.add(new JLabel("ils/elles "));
             row.add(ilsEllesField = new JTextField(8));
         rowContainer.add(row);
+
+        rowContainer.add(Box.createVerticalStrut(8));
 
         row = Box.createHorizontalBox();
             checkButton = new JButton("Check");
@@ -229,7 +237,8 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         field.setEnabled(true);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.invokeLater(() -> {
             new ConjugationFrame(null).setVisible(true);
         });
