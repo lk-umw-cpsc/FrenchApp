@@ -223,7 +223,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
     private void updateFormWithNextVerb() {
         infinitiveLabel.setText(answer.getInfinitive());
-        
+
         resetField(jeField);
         resetField(tuField);
         resetField(ilElleOnField);
