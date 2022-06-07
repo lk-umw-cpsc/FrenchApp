@@ -76,6 +76,13 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         if (visibility && pickedDeckUIEntry != null) {
             pickedDeckUIEntry.updateDueness();
         }
+        if (parent != null) {
+            if (visibility) {
+                setLocationRelativeTo(parent);
+            } else {
+                parent.setLocationRelativeTo(this);
+            }
+        }
         super.setVisible(visibility);
     }
 

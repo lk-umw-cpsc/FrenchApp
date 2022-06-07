@@ -108,6 +108,18 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         }
     }
 
+    @Override
+    public void setVisible(boolean visibility) {
+        if (parent != null) {
+            if (visibility) {
+                setLocationRelativeTo(parent);
+            } else {
+                parent.setLocationRelativeTo(this);
+            }
+        }
+        super.setVisible(visibility);
+    }
+
     /**
      * Removes a random number from the remaining numbers
      * @return the number picked

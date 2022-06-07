@@ -13,6 +13,7 @@ public class MainFrame extends JFrame {
 
     private DeckChooserFrame deckChooserFrame;
     private NumberPracticeFrame numberPracticeFrame;
+    private VerbGroupChooserFrame verbGroupChooserFrame;
 
     private static final int PADDING = 16;
 
@@ -35,6 +36,10 @@ public class MainFrame extends JFrame {
 
         mainBox.add(button = new JButton("Practice Numbers"));
         button.addActionListener(this::numbersPressed);
+        buttons.add(button);
+
+        mainBox.add(button = new JButton("Practice Verb Conjugation"));
+        button.addActionListener(this::conjugatePressed);
         buttons.add(button);
         
         for (JButton b : buttons) {
@@ -61,6 +66,14 @@ public class MainFrame extends JFrame {
             numberPracticeFrame = new NumberPracticeFrame(this);
         }
         numberPracticeFrame.setVisible(true);
+        setVisible(false);
+    }
+
+    private void conjugatePressed(ActionEvent e) {
+        if (verbGroupChooserFrame == null) {
+            verbGroupChooserFrame = new VerbGroupChooserFrame(this);
+        }
+        verbGroupChooserFrame.setVisible(true);
         setVisible(false);
     }
 

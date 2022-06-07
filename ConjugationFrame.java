@@ -6,9 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javax.swing.Box;
@@ -17,8 +15,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 public class ConjugationFrame extends JFrame implements WindowListener {
@@ -46,41 +42,32 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
     private List<Verb> remainingVerbs;
 
-    public ConjugationFrame(JFrame parent) {
+    public ConjugationFrame(JFrame parent, VerbGroup verbGroup) {
         super("Pratiquer les conjugaisons");
         this.parent = parent;
 
         rng = new Random();
 
-        Map<String, String> conjugations = new HashMap<>();
-        conjugations.put("je", "mange");
-        conjugations.put("tu", "manges");
-        conjugations.put("il/elle/on", "mange");
-        conjugations.put("nous", "mangeons");
-        conjugations.put("vous", "mangez");
-        conjugations.put("ils/elles", "mangent");
-        answer = new Verb("manger", conjugations);
-
         remainingVerbs = new ArrayList<>();
-        remainingVerbs.add(answer);
+        for (Verb v : verbGroup.getVerbs()) {
+            remainingVerbs.add(v);
+        }
 
         if (parent != null) {
-            setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         } else {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         setResizable(false);
 
+        Box row;
+
         Box rowContainer = Box.createVerticalBox();
         rowContainer.setBorder(new EmptyBorder(16, 16, 8, 16));
-        
-        Box row;
-        
+                
         row = Box.createHorizontalBox();
             row.add(Box.createHorizontalGlue());
-            //JLabel test;
-            //row.add(test = new JLabel("<html><body style='text-align: center'>Conjugate <i>manger</i></body></html>"));
-            // test.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            
             row.add(new JLabel(" Conjugate "));
             infinitiveLabel = new JLabel("manger ");
             infinitiveLabel.setFont(infinitiveLabel.getFont().deriveFont(Font.ITALIC));
@@ -142,11 +129,13 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         vousField.addActionListener(this::formSubmitted);
         ilsEllesField.addActionListener(this::formSubmitted);
 
-        infinitiveLabel.setText(answer.getInfinitive() + " ");
-
         DEFAULT_COLOR = jeField.getBackground();
 
+        answer = remainingVerbs.remove(rng.nextInt(remainingVerbs.size()));
+        updateFormWithNextVerb();
+
         add(rowContainer);
+        addWindowListener(this);
 
         pack();
         setLocationRelativeTo(parent);
@@ -155,12 +144,15 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     private void formSubmitted(ActionEvent e) {
         boolean correct = true;
 
+        JTextField firstIncorrect = null;
+
         if (jeField.getText().equals(answer.getConjugation("je"))) {
             jeField.setBackground(CORRECT_ANSWER_COLOR);
             jeField.setEnabled(false);
         } else {
             jeField.setBackground(INCORRECT_ANSWER_COLOR);
             correct = false;
+            firstIncorrect = jeField;
         }
 
         if (tuField.getText().equals(answer.getConjugation("tu"))) {
@@ -169,6 +161,9 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         } else {
             tuField.setBackground(INCORRECT_ANSWER_COLOR);
             correct = false;
+            if (firstIncorrect == null) {
+                firstIncorrect = tuField;
+            }
         }
 
         if (ilElleOnField.getText().equals(answer.getConjugation("il/elle/on"))) {
@@ -177,6 +172,9 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         } else {
             ilElleOnField.setBackground(INCORRECT_ANSWER_COLOR);
             correct = false;
+            if (firstIncorrect == null) {
+                firstIncorrect = ilElleOnField;
+            }
         }
 
         if (nousField.getText().equals(answer.getConjugation("nous"))) {
@@ -185,6 +183,9 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         } else {
             nousField.setBackground(INCORRECT_ANSWER_COLOR);
             correct = false;
+            if (firstIncorrect == null) {
+                firstIncorrect = nousField;
+            }
         }
 
         if (vousField.getText().equals(answer.getConjugation("vous"))) {
@@ -193,6 +194,9 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         } else {
             vousField.setBackground(INCORRECT_ANSWER_COLOR);
             correct = false;
+            if (firstIncorrect == null) {
+                firstIncorrect = vousField;
+            }
         }
 
         if (ilsEllesField.getText().equals(answer.getConjugation("ils/elles"))) {
@@ -201,11 +205,16 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         } else {
             ilsEllesField.setBackground(INCORRECT_ANSWER_COLOR);
             correct = false;
+            if (firstIncorrect == null) {
+                firstIncorrect = ilsEllesField;
+            }
         }
 
         if (correct) {
             checkButton.setEnabled(false);
             new Thread(this::pickNextVerb).start();
+        } else {
+            firstIncorrect.requestFocus();
         }
     }
 
@@ -214,7 +223,13 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             Thread.sleep(1500);
         } catch (InterruptedException e) {}
         if (remainingVerbs.isEmpty()) {
-            dispose();
+            if (parent == null) {
+                System.exit(0);
+            } else {
+                parent.setLocationRelativeTo(this);
+                parent.setVisible(true);
+                dispose();
+            }
         } else {
             answer = remainingVerbs.remove(rng.nextInt(remainingVerbs.size()));
             SwingUtilities.invokeLater(this::updateFormWithNextVerb);
@@ -222,7 +237,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     }
 
     private void updateFormWithNextVerb() {
-        infinitiveLabel.setText(answer.getInfinitive());
+        infinitiveLabel.setText(answer.getInfinitive() + " ");
 
         resetField(jeField);
         resetField(tuField);
@@ -241,17 +256,11 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         field.setEnabled(true);
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        SwingUtilities.invokeLater(() -> {
-            new ConjugationFrame(null).setVisible(true);
-        });
-    }
-
     @Override
     public void windowClosing(WindowEvent e) {
         if (parent != null) {
-            setLocationRelativeTo(parent);
+            parent.setLocationRelativeTo(this);
+            parent.setVisible(true);
         } else {
             System.exit(0);
         }
