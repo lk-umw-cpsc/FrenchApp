@@ -23,6 +23,10 @@ public class VerbGroup {
         return description;
     }
 
+    public String[] getColumns() {
+        return columns;
+    }
+
     private void parseFile(File f) {
         try (Scanner in = new Scanner(f)) {
             description = in.nextLine();
@@ -30,6 +34,9 @@ public class VerbGroup {
             for (int i = 0; i < columns.length; i++) {
                 columns[i] = columns[i].strip();
             }
+
+            String[] french = null;
+            Verb verb = null;
 
             boolean state = false;
             while (in.hasNextLine()) {
@@ -39,16 +46,23 @@ public class VerbGroup {
                 }
 
                 if (state) {
-                    // translations; currently not used
+                    Map<String, String> translations = new HashMap<>();
+
+                    String[] english = line.split(",");
+                    for (int word = 0; word < columns.length; word++) {
+                        english[word] = english[word].strip();
+                        translations.put(french[word], english[word]);
+                    }
                     state = false;
+                    verb.setTranslations(translations);
                 } else {
-                    String[] french = line.split(",");
+                    french = line.split(",");
                     Map<String, String> verbMap = new HashMap<>();
-                    for (int word = 0; word < french.length; word++) {
+                    for (int word = 0; word < columns.length; word++) {
                         french[word] = french[word].strip();
                         verbMap.put(columns[word], french[word]);
                     }
-                    Verb verb = new Verb(french[0], verbMap);
+                    verb = new Verb(french[0], verbMap);
                     verbs.add(verb);
                     state = true;
                 }

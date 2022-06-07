@@ -24,13 +24,10 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     private final Random rng;
 
     private JLabel infinitiveLabel;
+    private JLabel infinitiveTranslationLabel;
 
-    private JTextField jeField;
-    private JTextField tuField;
-    private JTextField ilElleOnField;
-    private JTextField nousField;
-    private JTextField vousField;
-    private JTextField ilsEllesField;
+    private JTextField[] inputFields;
+    private String[] columns;
 
     private JButton checkButton;
 
@@ -69,46 +66,57 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             row.add(Box.createHorizontalGlue());
             
             row.add(new JLabel(" Conjugate "));
-            infinitiveLabel = new JLabel("manger ");
-            infinitiveLabel.setFont(infinitiveLabel.getFont().deriveFont(Font.ITALIC));
+            infinitiveLabel = new JLabel();
+            infinitiveLabel.setFont(
+                infinitiveLabel.getFont().deriveFont(Font.ITALIC | Font.BOLD));
             row.add(infinitiveLabel);
             row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
 
-        rowContainer.add(Box.createVerticalStrut(8));
-
         row = Box.createHorizontalBox();
-            row.add(new JLabel("je/j' "));
-            row.add(jeField = new JTextField(8));
             row.add(Box.createHorizontalGlue());
-            row.add(Box.createHorizontalStrut(32));
-            row.add(new JLabel("nous "));
-            row.add(nousField = new JTextField(8));
-        rowContainer.add(row);
-
-        // rowContainer.add(Box.createVerticalStrut(4));
-
-        row = Box.createHorizontalBox();
-            row.add(new JLabel("tu "));
-            row.add(tuField = new JTextField(8));
+            row.add(infinitiveTranslationLabel = new JLabel());
+            infinitiveTranslationLabel.setFont(
+                infinitiveTranslationLabel.getFont().deriveFont(Font.ITALIC));
             row.add(Box.createHorizontalGlue());
-            row.add(Box.createHorizontalStrut(32));
-            row.add(new JLabel("vous "));
-            row.add(vousField = new JTextField(8));
-        rowContainer.add(row);
-
-        // rowContainer.add(Box.createVerticalStrut(4));
-
-        row = Box.createHorizontalBox();
-            row.add(new JLabel("il/elle/on "));
-            row.add(ilElleOnField = new JTextField(8));
-            row.add(Box.createHorizontalGlue());
-            row.add(Box.createHorizontalStrut(32));
-            row.add(new JLabel("ils/elles "));
-            row.add(ilsEllesField = new JTextField(8));
         rowContainer.add(row);
 
         rowContainer.add(Box.createVerticalStrut(8));
+
+        String[] columns = verbGroup.getColumns();
+        final int numColumns = columns.length - 1;
+        this.columns = new String[numColumns];
+
+        for (int i = 0; i < numColumns; i++) {
+            this.columns[i] = columns[i + 1];
+        }
+
+        inputFields = new JTextField[numColumns];
+
+        final int numRows = (numColumns / 2) + (numColumns % 2);
+        for (int left = 0, right = numRows; left < numRows; left++, right++) {
+            row = Box.createHorizontalBox();
+            row.add(new JLabel(columns[1 + left] + " "));
+            JTextField tf = new JTextField(8);
+            tf.addActionListener(this::formSubmitted);
+            inputFields[left] = tf;
+            row.add(tf);
+            row.add(Box.createHorizontalGlue());
+            if (right < numColumns) {
+                row.add(Box.createHorizontalStrut(32));
+                row.add(new JLabel(columns[1 + right]));
+                tf = new JTextField(8);
+                tf.setMaximumSize(tf.getPreferredSize());
+                tf.addActionListener(this::formSubmitted);
+                inputFields[right] = tf;
+                row.add(tf);
+            } else {
+                tf.setMaximumSize(tf.getPreferredSize());
+            }
+            rowContainer.add(row);
+        }
+
+        // rowContainer.add(Box.createVerticalStrut(8));
 
         row = Box.createHorizontalBox();
             checkButton = new JButton("Check");
@@ -117,19 +125,10 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             row.add(checkButton);
         rowContainer.add(row);
 
-        setFocusTraversalPolicy(new BasicTraversalPolicy(
-            jeField, tuField, ilElleOnField, nousField, 
-            vousField, ilsEllesField, checkButton
-        ));
+        JTextField colorProp = new JTextField();
+        DEFAULT_COLOR = colorProp.getBackground();
 
-        jeField.addActionListener(this::formSubmitted);
-        tuField.addActionListener(this::formSubmitted);
-        ilElleOnField.addActionListener(this::formSubmitted);
-        nousField.addActionListener(this::formSubmitted);
-        vousField.addActionListener(this::formSubmitted);
-        ilsEllesField.addActionListener(this::formSubmitted);
-
-        DEFAULT_COLOR = jeField.getBackground();
+        setFocusTraversalPolicy(new BasicTraversalPolicy(inputFields));
 
         answer = remainingVerbs.remove(rng.nextInt(remainingVerbs.size()));
         updateFormWithNextVerb();
@@ -146,67 +145,17 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
         JTextField firstIncorrect = null;
 
-        if (jeField.getText().equals(answer.getConjugation("je"))) {
-            jeField.setBackground(CORRECT_ANSWER_COLOR);
-            jeField.setEnabled(false);
-        } else {
-            jeField.setBackground(INCORRECT_ANSWER_COLOR);
-            correct = false;
-            firstIncorrect = jeField;
-        }
-
-        if (tuField.getText().equals(answer.getConjugation("tu"))) {
-            tuField.setBackground(CORRECT_ANSWER_COLOR);
-            tuField.setEnabled(false);
-        } else {
-            tuField.setBackground(INCORRECT_ANSWER_COLOR);
-            correct = false;
-            if (firstIncorrect == null) {
-                firstIncorrect = tuField;
-            }
-        }
-
-        if (ilElleOnField.getText().equals(answer.getConjugation("il/elle/on"))) {
-            ilElleOnField.setBackground(CORRECT_ANSWER_COLOR);
-            ilElleOnField.setEnabled(false);
-        } else {
-            ilElleOnField.setBackground(INCORRECT_ANSWER_COLOR);
-            correct = false;
-            if (firstIncorrect == null) {
-                firstIncorrect = ilElleOnField;
-            }
-        }
-
-        if (nousField.getText().equals(answer.getConjugation("nous"))) {
-            nousField.setBackground(CORRECT_ANSWER_COLOR);
-            nousField.setEnabled(false);
-        } else {
-            nousField.setBackground(INCORRECT_ANSWER_COLOR);
-            correct = false;
-            if (firstIncorrect == null) {
-                firstIncorrect = nousField;
-            }
-        }
-
-        if (vousField.getText().equals(answer.getConjugation("vous"))) {
-            vousField.setBackground(CORRECT_ANSWER_COLOR);
-            vousField.setEnabled(false);
-        } else {
-            vousField.setBackground(INCORRECT_ANSWER_COLOR);
-            correct = false;
-            if (firstIncorrect == null) {
-                firstIncorrect = vousField;
-            }
-        }
-
-        if (ilsEllesField.getText().equals(answer.getConjugation("ils/elles"))) {
-            ilsEllesField.setBackground(CORRECT_ANSWER_COLOR);
-            ilsEllesField.setEnabled(false);
-        } else {
-            ilsEllesField.setBackground(INCORRECT_ANSWER_COLOR);
-            correct = false;
-            if (firstIncorrect == null) {
-                firstIncorrect = ilsEllesField;
+        for (int i = 0, numFields = inputFields.length; i < numFields; i++) {
+            JTextField tf = inputFields[i];
+            if (tf.getText().equals(answer.getConjugation(columns[i]))) {
+                tf.setBackground(CORRECT_ANSWER_COLOR);
+                tf.setEnabled(false);
+            } else {
+                tf.setBackground(INCORRECT_ANSWER_COLOR);
+                correct = false;
+                if (firstIncorrect == null) {
+                    firstIncorrect = tf;
+                }
             }
         }
 
@@ -215,6 +164,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             new Thread(this::pickNextVerb).start();
         } else {
             firstIncorrect.requestFocus();
+            firstIncorrect.selectAll();
         }
     }
 
@@ -238,16 +188,14 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
     private void updateFormWithNextVerb() {
         infinitiveLabel.setText(answer.getInfinitive() + " ");
+        infinitiveTranslationLabel.setText(answer.translate(answer.getInfinitive()));
 
-        resetField(jeField);
-        resetField(tuField);
-        resetField(ilElleOnField);
-        resetField(nousField);
-        resetField(vousField);
-        resetField(ilsEllesField);
+        for (JTextField tf : inputFields) {
+            resetField(tf);
+        }
 
         checkButton.setEnabled(true);
-        jeField.requestFocus();
+        inputFields[0].requestFocus();
     }
 
     private void resetField(JTextField field) {
@@ -294,7 +242,5 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     @Override
     public void windowDeactivated(WindowEvent e) {
     }
-
-    
 
 }

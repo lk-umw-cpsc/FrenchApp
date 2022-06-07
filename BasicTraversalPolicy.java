@@ -23,7 +23,11 @@ public class BasicTraversalPolicy extends FocusTraversalPolicy {
 
     @Override
     public Component getComponentAfter(Container aContainer, Component aComponent) {
-        int index = componentToIndexMap.get(aComponent);
+        Integer indexWrapped = componentToIndexMap.get(aComponent);
+        if (indexWrapped == null) {
+            return null;
+        }
+        int index = indexWrapped;
         int tries = 0;
         do {
             index = (index + 1) % numComponents;
