@@ -10,6 +10,8 @@ public class VerbGroup {
 
     private static final char COMMENT_CHARACTER = '#';
 
+    private int order;
+
     private String description;
     private String[] columns;
     private List<Verb> verbs;
@@ -30,6 +32,7 @@ public class VerbGroup {
     private void parseFile(File f) {
         try (Scanner in = new Scanner(f)) {
             description = in.nextLine();
+            order = Integer.parseInt(in.nextLine());
             columns = in.nextLine().split(",");
             for (int i = 0; i < columns.length; i++) {
                 columns[i] = columns[i].strip();
@@ -72,6 +75,10 @@ public class VerbGroup {
 
     public List<Verb> getVerbs() {
         return verbs;
+    }
+
+    public int getOrder() {
+        return order;
     }
     
 }

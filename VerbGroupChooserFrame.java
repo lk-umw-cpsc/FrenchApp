@@ -2,6 +2,9 @@ import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
@@ -28,9 +31,16 @@ public class VerbGroupChooserFrame extends JFrame implements WindowListener {
 
         add(scrollPane);
 
+        List<VerbGroupUIEntry> entries = new ArrayList<>(32);
+
         File verbsFolder = new File("verbs");
         for (File f : verbsFolder.listFiles()) {
-            groupsContainer.add(new VerbGroupUIEntry(this, f));
+            entries.add(new VerbGroupUIEntry(this, f));
+        }
+
+        Collections.sort(entries);
+        for (VerbGroupUIEntry entry : entries) {
+            groupsContainer.add(entry);
         }
         
         addWindowListener(this);

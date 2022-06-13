@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class VerbGroupUIEntry extends JPanel implements MouseListener {
+public class VerbGroupUIEntry extends JPanel implements MouseListener, Comparable<VerbGroupUIEntry> {
 
     private final VerbGroup verbGroup;
     private final VerbGroupChooserFrame parent;
@@ -54,5 +54,10 @@ public class VerbGroupUIEntry extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         
+    }
+
+    @Override
+    public int compareTo(VerbGroupUIEntry o) {
+        return verbGroup.getOrder() - o.verbGroup.getOrder();
     }
 }
