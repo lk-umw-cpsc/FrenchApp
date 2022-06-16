@@ -4,7 +4,8 @@ public class FlashCard {
 
     // number of days between cards being shown for study
     private static final int STUDY_INTERVAL_CORRECT = 7;
-    private static final int STUDY_INTERVAL_INCORRECT = 1;
+    private static final int STUDY_INTERVAL_REVIEWED = 1;
+    private static final int STUDY_INTERVAL_INCORRECT = 0;
 
     public static final int ANSWER_CORRECT = 0;
     public static final int ANSWER_INCORRECT = 1;
@@ -109,7 +110,7 @@ public class FlashCard {
         } else if (correctIncorrectOrReviewed == ANSWER_INCORRECT) {
             setDueInDays(STUDY_INTERVAL_INCORRECT);
         } else {
-            setDueInDays(0);
+            setDueInDays(STUDY_INTERVAL_REVIEWED);
         }
     }
 
