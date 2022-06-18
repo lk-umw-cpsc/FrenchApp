@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 public class MainFrame extends JFrame {
 
     private DeckChooserFrame deckChooserFrame;
-    private NumberPracticeFrame numberPracticeFrame;
+    private NumberPracticeModeChooserFrame numberPracticeModeChooserFrame;
     private VerbGroupChooserFrame verbGroupChooserFrame;
 
     private static final int PADDING = 16;
@@ -57,15 +57,17 @@ public class MainFrame extends JFrame {
         if (deckChooserFrame == null) {
             deckChooserFrame = new DeckChooserFrame(this);
         }
+        deckChooserFrame.setLocationRelativeTo(this);
         deckChooserFrame.setVisible(true);
         setVisible(false);
     }
 
     private void numbersPressed(ActionEvent e) {
-        if (numberPracticeFrame == null) {
-            numberPracticeFrame = new NumberPracticeFrame(this, 3);
+        if (numberPracticeModeChooserFrame == null) {
+            numberPracticeModeChooserFrame = new NumberPracticeModeChooserFrame(this);
         }
-        numberPracticeFrame.setVisible(true);
+        numberPracticeModeChooserFrame.setLocationRelativeTo(this);
+        numberPracticeModeChooserFrame.setVisible(true);
         setVisible(false);
     }
 
@@ -73,6 +75,7 @@ public class MainFrame extends JFrame {
         if (verbGroupChooserFrame == null) {
             verbGroupChooserFrame = new VerbGroupChooserFrame(this);
         }
+        verbGroupChooserFrame.setLocationRelativeTo(this);
         verbGroupChooserFrame.setVisible(true);
         setVisible(false);
     }

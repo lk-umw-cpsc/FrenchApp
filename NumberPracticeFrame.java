@@ -223,18 +223,6 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         }
     }
 
-    @Override
-    public void setVisible(boolean visibility) {
-        if (parent != null) {
-            if (visibility) {
-                setLocationRelativeTo(parent);
-            } else {
-                parent.setLocationRelativeTo(this);
-            }
-        }
-        super.setVisible(visibility);
-    }
-
     /**
      * Removes a random number from the remaining numbers
      * @return the number picked
@@ -262,6 +250,8 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             inputField.setEnabled(false);
             promptLabel.setText("Correct!");
             promptLabel.setForeground(FONT_COLOR_CORRECT);
+            revalidate();
+            repaint();
             new Thread(this::waitThenPickNext).start();
         } else {
             System.out.println("Expected: " + answer);
@@ -302,6 +292,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
         if (parent != null) {
+            parent.setLocationRelativeTo(this);
             parent.setVisible(true);
         } else {
             System.exit(0);
