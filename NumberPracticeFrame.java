@@ -39,6 +39,8 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
 
     private static final int[] RANGE_CAPS = { 11, 20, 70, 101 };
 
+    private static final Color FONT_COLOR_CORRECT = new Color(0, 189, 0);
+
     private int choice;
     private int range;
 
@@ -103,7 +105,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         rowContainer.add(row);
         rowContainer.add(Box.createVerticalStrut(4));
 
-            inputField = new JTextField(24);
+            inputField = new JTextField(32);
             inputField.setHorizontalAlignment(JTextField.CENTER);
             inputField.setFont(inputField.getFont().deriveFont(18.0f));
             inputField.addActionListener(this::inputSubmitted);
@@ -122,6 +124,10 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     }
 
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(NumberPracticeFrame::createAndShow);
+    }
+
+    private static void createAndShow() {
         NumberPracticeFrame n = new NumberPracticeFrame(null, BILLIONS);
         n.setVisible(true);
     }
@@ -245,6 +251,9 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     }
 
     private void inputSubmitted(ActionEvent e) {
+        if (!inputField.isEnabled()) {
+            return;
+        }
         String input = inputField.getText().toLowerCase().strip();
         if (input.isBlank()) {
             return;
@@ -252,7 +261,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         if (input.equals(answer)) {
             inputField.setEnabled(false);
             promptLabel.setText("Correct!");
-            promptLabel.setForeground(Color.GREEN);
+            promptLabel.setForeground(FONT_COLOR_CORRECT);
             new Thread(this::waitThenPickNext).start();
         } else {
             System.out.println("Expected: " + answer);
