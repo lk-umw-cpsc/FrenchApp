@@ -63,7 +63,7 @@ public class MainFrame extends JFrame {
 
     private void numbersPressed(ActionEvent e) {
         if (numberPracticeFrame == null) {
-            numberPracticeFrame = new NumberPracticeFrame(this);
+            numberPracticeFrame = new NumberPracticeFrame(this, 3);
         }
         numberPracticeFrame.setVisible(true);
         setVisible(false);

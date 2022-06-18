@@ -19,7 +19,7 @@ dix-sept
 dix-huit
 dix-neuf
 vingt
-vingt-et-un
+vingt et un
 vingt-deux
 vingt-trois
 vingt-quatre
@@ -29,7 +29,7 @@ vingt-sept
 vingt-huit
 vingt-neuf
 trente
-trente-et-un
+trente et un
 trente-deux
 trente-trois
 trente-quatre
@@ -49,7 +49,7 @@ quarante-sept
 quarante-huit
 quarante-neuf
 cinquante
-cinquante-et-un
+cinquante et un
 cinquante-doux
 cinquante-trois
 cinquante-quatre
@@ -59,7 +59,7 @@ cinquante-sept
 cinquante-huit
 cinquante-neuf
 soixante
-soixante-et-un
+soixante et un
 soixante-deux
 soixante-trois
 soixante-quatre
@@ -69,7 +69,7 @@ soixante-sept
 soixante-huit
 soixante-neuf
 soixante-dix
-soixante-et-onze
+soixante et onze
 soixante-douze
 soixante-treize
 soixante-quatorze
