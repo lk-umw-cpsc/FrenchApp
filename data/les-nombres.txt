@@ -50,7 +50,7 @@ quarante-huit
 quarante-neuf
 cinquante
 cinquante et un
-cinquante-doux
+cinquante-deux
 cinquante-trois
 cinquante-quatre
 cinquante-cinq
@@ -80,7 +80,7 @@ soixante-dix-huit
 soixante-dix-neuf
 quatre-vingts
 quatre-vingt-un
-quatre-vingt-doux
+quatre-vingt-deux
 quatre-vingt-trois
 quatre-vingt-quatre
 quatre-vingt-cinq
