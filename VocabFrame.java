@@ -176,8 +176,6 @@ public class VocabFrame extends JFrame implements WindowListener {
         add(flashcardsPane);
 
         pack();
-        setLocationRelativeTo(parent);
-        setVisible(true);
     }
 
     private void startButtonPressed(ActionEvent e) {
@@ -323,6 +321,7 @@ public class VocabFrame extends JFrame implements WindowListener {
     public void windowClosing(WindowEvent e) {
         deck.save();
         if (parent != null) {
+            parent.setLocationRelativeTo(this);
             parent.setVisible(true);
         }
     }

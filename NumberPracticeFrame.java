@@ -120,16 +120,6 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             promptLabel.setText(currentNumber.getDigitsString());
         }
         pack();
-        setLocationRelativeTo(parent);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(NumberPracticeFrame::createAndShow);
-    }
-
-    private static void createAndShow() {
-        NumberPracticeFrame n = new NumberPracticeFrame(null, BILLIONS);
-        n.setVisible(true);
     }
 
     private FrenchNumber generateNumberString(int places) {

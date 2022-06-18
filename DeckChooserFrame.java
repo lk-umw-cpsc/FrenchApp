@@ -76,13 +76,6 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         if (visibility && pickedDeckUIEntry != null) {
             pickedDeckUIEntry.updateDueness();
         }
-        if (parent != null) {
-            if (visibility) {
-                setLocationRelativeTo(parent);
-            } else {
-                parent.setLocationRelativeTo(this);
-            }
-        }
         super.setVisible(visibility);
     }
 
@@ -94,6 +87,7 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
         if (parent != null) {
+            parent.setLocationRelativeTo(this);
             parent.setVisible(true);
         } else {
             System.exit(0);

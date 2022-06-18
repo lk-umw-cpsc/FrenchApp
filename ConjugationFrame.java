@@ -137,7 +137,6 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         addWindowListener(this);
 
         pack();
-        setLocationRelativeTo(parent);
     }
 
     private void formSubmitted(ActionEvent e) {

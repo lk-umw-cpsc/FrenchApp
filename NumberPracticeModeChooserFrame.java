@@ -117,7 +117,9 @@ public class NumberPracticeModeChooserFrame extends JFrame implements WindowList
     private void practiceButtonPressed(ActionEvent e) {
         for (int i = 0, n = buttons.length; i < n; i++) {
             if (buttons[i].isSelected()) {
-                new NumberPracticeFrame(this, i - 4).setVisible(true);
+                NumberPracticeFrame npf = new NumberPracticeFrame(this, i - 4);
+                npf.setLocationRelativeTo(this);
+                npf.setVisible(true);
                 setVisible(false);
                 return;
             }

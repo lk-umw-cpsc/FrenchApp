@@ -46,11 +46,12 @@ public class VerbGroupChooserFrame extends JFrame implements WindowListener {
         addWindowListener(this);
 
         pack();
-        setLocationRelativeTo(parent);
     }
 
     public void groupSelected(VerbGroup group) {
-        new ConjugationFrame(this, group).setVisible(true);
+        ConjugationFrame child = new ConjugationFrame(this, group);
+        child.setLocationRelativeTo(this);
+        child.setVisible(true);
         setVisible(false);
     }
 
