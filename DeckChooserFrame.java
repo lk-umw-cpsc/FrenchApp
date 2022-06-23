@@ -66,8 +66,8 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
 
     public void deckSelected(DeckUIEntry caller, Deck deck) {
         pickedDeckUIEntry = caller;
-        VocabFrame vf = new VocabFrame(deck);
-        vf.createAndShow(this);
+        VocabFrame vf = new VocabFrame(deck, this);
+        vf.setVisible(true);
         setVisible(false);
     }
 

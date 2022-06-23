@@ -71,7 +71,7 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     private String promptText;
     
-    public VocabFrame(Deck deck) {
+    public VocabFrame(Deck deck, JFrame parent) {
         super("Pratiquer " + deck.getDescription());
         this.deck = deck;
 
@@ -84,9 +84,7 @@ public class VocabFrame extends JFrame implements WindowListener {
         }
         Collections.shuffle(dueCardsRemaining);
         incorrectPile = new ArrayList<>();
-    }
-
-    public void createAndShow(JFrame parent) {
+        
         this.parent = parent;
         addWindowListener(this);
 
