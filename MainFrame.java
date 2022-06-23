@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
 public class MainFrame extends JFrame {
@@ -18,39 +19,51 @@ public class MainFrame extends JFrame {
     private static final int PADDING = 16;
 
     public MainFrame() {
-        super("French App");
+        super("French Study Tool by Lauren Knight");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-    }
-    
-    public void createAndShow() {
-        Box mainBox = Box.createVerticalBox();
-        mainBox.setBorder(new EmptyBorder(PADDING, PADDING, PADDING, PADDING));
+
+        Box rowContainer = Box.createVerticalBox();
+        rowContainer.setBorder(new EmptyBorder(8, PADDING, PADDING, PADDING));
 
         JButton button;
         List<JButton> buttons = new ArrayList<>();
 
-        mainBox.add(button = new JButton("Practice Vocabulary"));
+        Box row = Box.createHorizontalBox();
+            row.add(Box.createHorizontalGlue());
+            row.add(new JLabel("Select a study mode:"));
+            row.add(Box.createHorizontalGlue());
+        rowContainer.add(row);
+
+        rowContainer.add(Box.createVerticalStrut(4));
+
+        row = Box.createHorizontalBox();
+            row.add(button = new JButton("Practice Vocabulary"));
+        rowContainer.add(row);
+
         button.addActionListener(this::vocabPressed);
         buttons.add(button);
 
-        mainBox.add(button = new JButton("Practice Numbers"));
+        row = Box.createHorizontalBox();
+            row.add(button = new JButton("Practice Numbers"));
+        rowContainer.add(row);
         button.addActionListener(this::numbersPressed);
         buttons.add(button);
 
-        mainBox.add(button = new JButton("Practice Verb Conjugation"));
+        row = Box.createHorizontalBox();
+            row.add(button = new JButton("Practice Verb Conjugation"));
+        rowContainer.add(row);
         button.addActionListener(this::conjugatePressed);
         buttons.add(button);
         
         for (JButton b : buttons) {
-            b.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)b.getPreferredSize().getHeight()));
+            b.setMaximumSize(new Dimension(Integer.MAX_VALUE, b.getPreferredSize().height));
         }
         
-        add(mainBox);
+        add(rowContainer);
 
         pack();
         setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     private void vocabPressed(ActionEvent e) {
