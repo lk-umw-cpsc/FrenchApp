@@ -57,7 +57,9 @@ public class MainFrame extends JFrame {
         button.addActionListener(this::conjugatePressed);
         buttons.add(button);
         
-        mainBox.add(button = new JButton("Practice Telling Time"));
+        row = Box.createHorizontalBox();
+            row.add(button = new JButton("Practice Telling Time"));
+        rowContainer.add(row);
         button.addActionListener(this::timePressed);
         buttons.add(button);
 
