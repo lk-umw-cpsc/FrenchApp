@@ -5,17 +5,21 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main {
 
     public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException
-                | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            System.out.println("Unable to set system L&F.");
-        }
+        initializeOSLookAndFeel();
         SwingUtilities.invokeLater(Main::createAndShowGUI);
     }
 
+    private static void initializeOSLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException
+                    | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            System.out.println("Unable to set system L&F.");
+        }
+    }
+
     private static void createAndShowGUI() {
-        new MainFrame().createAndShow();
+        new MainFrame().setVisible(true);
     }
 
 }
