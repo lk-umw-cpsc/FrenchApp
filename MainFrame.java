@@ -14,6 +14,7 @@ public class MainFrame extends JFrame {
     private DeckChooserFrame deckChooserFrame;
     private NumberPracticeModeChooserFrame numberPracticeModeChooserFrame;
     private VerbGroupChooserFrame verbGroupChooserFrame;
+    private TimePracticeFrame timePracticeFrame;
 
     private static final int PADDING = 16;
 
@@ -42,6 +43,10 @@ public class MainFrame extends JFrame {
         button.addActionListener(this::conjugatePressed);
         buttons.add(button);
         
+        mainBox.add(button = new JButton("Practice Telling Time"));
+        button.addActionListener(this::timePressed);
+        buttons.add(button);
+
         for (JButton b : buttons) {
             b.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)b.getPreferredSize().getHeight()));
         }
@@ -77,6 +82,15 @@ public class MainFrame extends JFrame {
         }
         verbGroupChooserFrame.setLocationRelativeTo(this);
         verbGroupChooserFrame.setVisible(true);
+        setVisible(false);
+    }
+
+    private void timePressed(ActionEvent e) {
+        if (timePracticeFrame == null) {
+            timePracticeFrame = new TimePracticeFrame(this);
+        }
+        timePracticeFrame.setLocationRelativeTo(this);
+        timePracticeFrame.setVisible(true);
         setVisible(false);
     }
 

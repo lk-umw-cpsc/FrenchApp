@@ -1,0 +1,60 @@
+
+un
+deux
+trois
+quatre
+cinq
+six
+sept
+huit
+neuf
+dix
+onze
+douze
+treize
+quatorze
+quinze,et quart
+seize
+dix-sept
+dix-huit
+dix-neuf
+vingt
+vingt et un
+vingt-deux
+vingt-trois
+vingt-quatre
+vingt-cinq
+vingt-six
+vingt-sept
+vingt-huit
+vingt-neuf
+*
+trente et un
+trente-deux
+trente-trois
+trente-quatre
+trente-cinq
+trente-six
+trente-sept
+trente-huit
+trente-neuf
+quarante,moins vingt
+quarante et un
+quarante-deux
+quarante-trois
+quarante-quatre,moins le quart
+quarante-cinq
+quarante-six
+quarante-sept
+quarante-huit
+quarante-neuf
+cinquante,moins dix
+cinquante et un
+cinquante-deux
+cinquante-trois
+cinquante-quatre
+cinquante-cinq,moins cinq
+cinquante-six,moins quatre
+cinquante-sept,moins trois
+cinquante-huit,moins deux
+cinquante-neuf
