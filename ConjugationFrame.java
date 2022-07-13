@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.Box;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -201,7 +200,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
     private void updateFormWithNextVerb() {
         infinitiveLabel.setText(answer.getInfinitive() + " ");
-        infinitiveTranslationLabel.setText(answer.translate(answer.getInfinitive() + " "));
+        infinitiveTranslationLabel.setText(answer.translate(answer.getInfinitive()) + " ");
 
         for (JTextField tf : inputFields) {
             resetField(tf);
