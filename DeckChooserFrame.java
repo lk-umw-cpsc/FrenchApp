@@ -54,6 +54,7 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
                 continue;
             }
             entries.add(new DeckUIEntry(this, f));
+
         }
         Collections.sort(entries);
         for (DeckUIEntry entry : entries) {
@@ -67,6 +68,7 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         entryContainer.removeAll();
         if (!folder.equals(root)) {
             entryContainer.add(new DeckUIEntry(this, root));
+            entryContainer.add(Box.createVerticalStrut(4));
         }
         updateEntries(folder.listFiles());
         revalidate();

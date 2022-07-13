@@ -19,7 +19,6 @@ import javax.swing.border.EmptyBorder;
 import resources.ResourceManager;
 import swingcustom.BasicLabel;
 import swingcustom.FontsAndColors;
-import swingcustom.HeaderLabel;
 
 public class DeckUIEntry extends JPanel implements MouseListener, Comparable<DeckUIEntry> {
 
@@ -51,7 +50,7 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
             add(new JLabel("ERROR"));
         } else {
             JLabel iconLabel = new JLabel(icon);
-            iconLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
+            iconLabel.setBorder(new EmptyBorder(8, 8, 8, 16));
             add(iconLabel);
         }
         boolean containsDueCards = false;

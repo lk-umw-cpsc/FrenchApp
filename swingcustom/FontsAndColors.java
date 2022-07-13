@@ -21,6 +21,7 @@ public class FontsAndColors {
 
     public static final Color COLOR_DARK_FOREGROUND = COLOR_D;
     public static final Color COLOR_DARK_BACKGROUND = COLOR_A;
+    public static final Color COLOR_DARK_BACKGROUND_HIGHLIGHT = hex("#453AA8");
 
     public static final Color COLOR_DARK_BACKGROUND_CORRECT = hex("#297026");
 
