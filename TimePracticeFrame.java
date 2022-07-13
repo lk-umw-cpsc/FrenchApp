@@ -6,6 +6,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import swingcustom.BasicLabel;
+import swingcustom.CustomTextField;
+import swingcustom.FontsAndColors;
+import swingcustom.PromptLabel;
 import swingextended.ApplicationUIConstants;
 import swingextended.AutoShowParentFrame;
 
@@ -28,6 +32,8 @@ public class TimePracticeFrame extends AutoShowParentFrame {
     private void initializeChildComponents() {
         // lay rows out vertically
         Box rowContainer = Box.createVerticalBox();
+        rowContainer.setOpaque(true);
+        rowContainer.setBackground(FontsAndColors.APP_BACKGROUND);
 
         final int padding = ApplicationUIConstants.FRAME_CONTENT_PADDING;
         rowContainer.setBorder(new EmptyBorder(padding, padding, padding, padding));
@@ -36,20 +42,20 @@ public class TimePracticeFrame extends AutoShowParentFrame {
         Box row;
 
         row = Box.createHorizontalBox();
-            timeLabel = new JLabel("12:00AM");
-            timeLabel.setFont(timeLabel.getFont().deriveFont(24f));
-            row.add(Box.createHorizontalGlue());
+            timeLabel = new PromptLabel("12:00AM");
+            // timeLabel.setFont(timeLabel.getFont().deriveFont(24f));
+            // row.add(Box.createHorizontalGlue());
             row.add(timeLabel);
-            row.add(Box.createHorizontalGlue());
+            // row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
 
         row = Box.createHorizontalBox();
             row.add(Box.createHorizontalGlue());
-            row.add(new JLabel("Il est "));
-            inputField = new JTextField(16);
+            row.add(new BasicLabel("Il est "));
+            inputField = new CustomTextField(16);
             inputField.addActionListener(this::inputSubmitted);
             row.add(inputField);
-            row.add(new JLabel("."));
+            row.add(new BasicLabel("."));
             row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
 

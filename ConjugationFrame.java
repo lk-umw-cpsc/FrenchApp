@@ -17,6 +17,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import swingcustom.BasicLabel;
+import swingcustom.CustomButton;
+import swingcustom.CustomTextField;
+import swingcustom.FontsAndColors;
+import swingcustom.HeaderLabel;
+
 public class ConjugationFrame extends JFrame implements WindowListener {
     
     private final JFrame parent;
@@ -29,7 +35,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     private JTextField[] inputFields;
     private String[] columns;
 
-    private JButton checkButton;
+    private CustomButton checkButton;
 
     private Verb answer;
 
@@ -61,12 +67,14 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
         Box rowContainer = Box.createVerticalBox();
         rowContainer.setBorder(new EmptyBorder(16, 16, 8, 16));
+        rowContainer.setOpaque(true);
+        rowContainer.setBackground(FontsAndColors.APP_BACKGROUND);
                 
         row = Box.createHorizontalBox();
             row.add(Box.createHorizontalGlue());
             
-            row.add(new JLabel(" Conjugate "));
-            infinitiveLabel = new JLabel();
+            row.add(new HeaderLabel(" Conjugate "));
+            infinitiveLabel = new HeaderLabel("");
             infinitiveLabel.setFont(
                 infinitiveLabel.getFont().deriveFont(Font.ITALIC | Font.BOLD));
             row.add(infinitiveLabel);
@@ -75,7 +83,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
         row = Box.createHorizontalBox();
             row.add(Box.createHorizontalGlue());
-            row.add(infinitiveTranslationLabel = new JLabel());
+            row.add(infinitiveTranslationLabel = new BasicLabel(""));
             infinitiveTranslationLabel.setFont(
                 infinitiveTranslationLabel.getFont().deriveFont(Font.ITALIC));
             row.add(Box.createHorizontalGlue());
@@ -96,16 +104,18 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         final int numRows = (numColumns / 2) + (numColumns % 2);
         for (int left = 0, right = numRows; left < numRows; left++, right++) {
             row = Box.createHorizontalBox();
-            row.add(new JLabel(columns[1 + left] + " "));
-            JTextField tf = new JTextField(8);
+            row.add(new BasicLabel(columns[1 + left] + " "));
+            JTextField tf = new CustomTextField(8);
+            tf.setFont(tf.getFont().deriveFont(16f));
             tf.addActionListener(this::formSubmitted);
             inputFields[left] = tf;
             row.add(tf);
             row.add(Box.createHorizontalGlue());
             if (right < numColumns) {
                 row.add(Box.createHorizontalStrut(32));
-                row.add(new JLabel(columns[1 + right]));
-                tf = new JTextField(8);
+                row.add(new BasicLabel(columns[1 + right]));
+                tf = new CustomTextField(8);
+                tf.setFont(tf.getFont().deriveFont(16f));
                 tf.setMaximumSize(tf.getPreferredSize());
                 tf.addActionListener(this::formSubmitted);
                 inputFields[right] = tf;
@@ -116,12 +126,12 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             rowContainer.add(row);
         }
 
-        // rowContainer.add(Box.createVerticalStrut(8));
+        rowContainer.add(Box.createVerticalStrut(8));
 
         row = Box.createHorizontalBox();
-            checkButton = new JButton("Check");
+            checkButton = new CustomButton("Check");
             checkButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-            checkButton.addActionListener(this::formSubmitted);
+            checkButton.addButtonListener(this::buttonPressed);
             row.add(checkButton);
         rowContainer.add(row);
 
@@ -137,6 +147,10 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         addWindowListener(this);
 
         pack();
+    }
+
+    private void buttonPressed() {
+        formSubmitted(null);
     }
 
     private void formSubmitted(ActionEvent e) {
@@ -187,7 +201,7 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
     private void updateFormWithNextVerb() {
         infinitiveLabel.setText(answer.getInfinitive() + " ");
-        infinitiveTranslationLabel.setText(answer.translate(answer.getInfinitive()));
+        infinitiveTranslationLabel.setText(answer.translate(answer.getInfinitive() + " "));
 
         for (JTextField tf : inputFields) {
             resetField(tf);

@@ -11,6 +11,9 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+
+import swingcustom.FontsAndColors;
 
 public class DeckChooserFrame extends JFrame implements WindowListener {
 
@@ -25,8 +28,11 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
     public DeckChooserFrame(JFrame parent) {
         this.parent = parent;
         addWindowListener(this);
+        // setOpaque(true);
         setTitle("Choose a deck");
         entryContainer = Box.createVerticalBox();
+        entryContainer.setOpaque(true);
+        entryContainer.setBackground(FontsAndColors.APP_BACKGROUND);
         updateEntries(root.listFiles());
 
         JScrollPane scrollPane = new JScrollPane(entryContainer);
@@ -34,6 +40,8 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setPreferredSize(new Dimension(400, 300));
+        entryContainer.setBorder(new EmptyBorder(8, 8, 8, 8));
+        scrollPane.setBackground(FontsAndColors.APP_BACKGROUND);
         add(scrollPane);
         pack();
         setLocationRelativeTo(parent);
@@ -50,6 +58,7 @@ public class DeckChooserFrame extends JFrame implements WindowListener {
         Collections.sort(entries);
         for (DeckUIEntry entry : entries) {
             entryContainer.add(entry);
+            entryContainer.add(Box.createVerticalStrut(4));
         }
         entryContainer.add(Box.createVerticalGlue());
     }

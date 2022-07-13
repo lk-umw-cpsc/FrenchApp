@@ -20,6 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import swingcustom.CustomTextField;
+import swingcustom.FontsAndColors;
+import swingcustom.HeaderLabel;
+import swingcustom.PromptLabel;
+
 public class NumberPracticeFrame extends JFrame implements WindowListener {
 
     private final JFrame parent;
@@ -40,6 +45,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     private static final int[] RANGE_CAPS = { 11, 20, 70, 101 };
 
     private static final Color FONT_COLOR_CORRECT = new Color(0, 189, 0);
+    private final Color defaultFontColor;
 
     private int choice;
     private int range;
@@ -84,20 +90,23 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         addWindowListener(this);
 
         Box rowContainer = Box.createVerticalBox();
+        rowContainer.setOpaque(true);
+        rowContainer.setBackground(FontsAndColors.APP_BACKGROUND);
         rowContainer.setBorder(new EmptyBorder(24, 8, 16, 8));
 
         Box row;
 
         row = Box.createHorizontalBox();
             row.add(Box.createHorizontalGlue());
-            row.add(new JLabel("Convert to French:"));
+            row.add(new HeaderLabel("Convert to French:"));
             row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
 
         rowContainer.add(Box.createVerticalStrut(8));
         
         row = Box.createHorizontalBox();
-            promptLabel = new JLabel("000 000 000 000");
+            promptLabel = new PromptLabel("000 000 000 000");
+            defaultFontColor = promptLabel.getForeground();
             promptLabel.setFont(promptLabel.getFont().deriveFont(24.0f));
             row.add(Box.createHorizontalGlue());
             row.add(promptLabel);
@@ -105,9 +114,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         rowContainer.add(row);
         rowContainer.add(Box.createVerticalStrut(4));
 
-            inputField = new JTextField(32);
-            inputField.setHorizontalAlignment(JTextField.CENTER);
-            inputField.setFont(inputField.getFont().deriveFont(18.0f));
+            inputField = new CustomTextField(32);
             inputField.addActionListener(this::inputSubmitted);
             Dimension pref = inputField.getPreferredSize();
             inputField.setMaximumSize(new Dimension(Integer.MAX_VALUE, pref.height));
@@ -260,7 +267,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             answer = currentNumber.getWordsString();
             promptText = currentNumber.getDigitsString();
         }
-        promptLabel.setForeground(Color.BLACK);
+        promptLabel.setForeground(defaultFontColor);
         promptLabel.setText(promptText);
         inputField.setText("");
         inputField.setEnabled(true);

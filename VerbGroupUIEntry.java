@@ -8,6 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import swingcustom.BasicLabel;
+import swingcustom.FontsAndColors;
+
 public class VerbGroupUIEntry extends JPanel implements MouseListener, Comparable<VerbGroupUIEntry> {
 
     private final VerbGroup verbGroup;
@@ -19,10 +22,12 @@ public class VerbGroupUIEntry extends JPanel implements MouseListener, Comparabl
 
         setBorder(new EmptyBorder(8, 8, 8, 8));
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setOpaque(true);
+        setBackground(FontsAndColors.APP_BACKGROUND);
 
         JLabel label;
-        add(label = new JLabel(verbGroup.getDescription()));
-        setBackground(label.getBackground());
+        add(label = new BasicLabel(verbGroup.getDescription()));
+        // setBackground(label.getBackground());
         
         add(Box.createHorizontalGlue()); // left-align
 

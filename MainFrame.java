@@ -1,14 +1,16 @@
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
+
+import swingcustom.CustomButton;
+import swingcustom.FontsAndColors;
 
 public class MainFrame extends JFrame {
 
@@ -27,53 +29,68 @@ public class MainFrame extends JFrame {
         Box rowContainer = Box.createVerticalBox();
         rowContainer.setBorder(new EmptyBorder(8, PADDING, PADDING, PADDING));
 
-        JButton button;
-        List<JButton> buttons = new ArrayList<>();
+        rowContainer.setOpaque(true);
+        rowContainer.setBackground(FontsAndColors.APP_BACKGROUND);
+
+        CustomButton button;
+        List<Component> buttons = new ArrayList<>();
 
         Box row = Box.createHorizontalBox();
             row.add(Box.createHorizontalGlue());
-            row.add(new JLabel("Select a study mode:"));
+            JLabel label = new JLabel("Choose an activity:");
+            label.setFont(FontsAndColors.FONT_HEADING);
+            label.setForeground(FontsAndColors.COLOR_DARK_FOREGROUND);
+            row.add(label);
             row.add(Box.createHorizontalGlue());
         rowContainer.add(row);
 
         rowContainer.add(Box.createVerticalStrut(4));
 
         row = Box.createHorizontalBox();
-            row.add(button = new JButton("Practice Vocabulary"));
+            // row.add(button = new JButton("Vocabulary"));
+            button = new CustomButton("Vocabulary");
+            button.addButtonListener(this::vocabPressed);
+            row.add(button);
+            buttons.add(button);
         rowContainer.add(row);
 
-        button.addActionListener(this::vocabPressed);
-        buttons.add(button);
-
-        row = Box.createHorizontalBox();
-            row.add(button = new JButton("Practice Numbers"));
-        rowContainer.add(row);
-        button.addActionListener(this::numbersPressed);
-        buttons.add(button);
+        rowContainer.add(Box.createVerticalStrut(4));
 
         row = Box.createHorizontalBox();
-            row.add(button = new JButton("Practice Verb Conjugation"));
+            row.add(button = new CustomButton("Numbers"));
         rowContainer.add(row);
-        button.addActionListener(this::conjugatePressed);
+        button.addButtonListener(this::numbersPressed);
         buttons.add(button);
+        rowContainer.add(Box.createVerticalStrut(4));
+
+        row = Box.createHorizontalBox();
+            row.add(button = new CustomButton("Conjugation"));
+        rowContainer.add(row);
+        button.addButtonListener(this::conjugatePressed);
+        buttons.add(button);
+        rowContainer.add(Box.createVerticalStrut(4));
         
         row = Box.createHorizontalBox();
-            row.add(button = new JButton("Practice Telling Time"));
+            row.add(button = new CustomButton("Time"));
         rowContainer.add(row);
-        button.addActionListener(this::timePressed);
+        button.addButtonListener(this::timePressed);
         buttons.add(button);
 
-        for (JButton b : buttons) {
+        for (Component b : buttons) {
             b.setMaximumSize(new Dimension(Integer.MAX_VALUE, b.getPreferredSize().height));
         }
         
         add(rowContainer);
 
         pack();
+        Dimension d = rowContainer.getSize();
+        d.width = 250;
+        rowContainer.setPreferredSize(d);
+        pack();
         setLocationRelativeTo(null);
     }
 
-    private void vocabPressed(ActionEvent e) {
+    private void vocabPressed() {
         if (deckChooserFrame == null) {
             deckChooserFrame = new DeckChooserFrame(this);
         }
@@ -82,7 +99,7 @@ public class MainFrame extends JFrame {
         setVisible(false);
     }
 
-    private void numbersPressed(ActionEvent e) {
+    private void numbersPressed() {
         if (numberPracticeModeChooserFrame == null) {
             numberPracticeModeChooserFrame = new NumberPracticeModeChooserFrame(this);
         }
@@ -91,7 +108,7 @@ public class MainFrame extends JFrame {
         setVisible(false);
     }
 
-    private void conjugatePressed(ActionEvent e) {
+    private void conjugatePressed() {
         if (verbGroupChooserFrame == null) {
             verbGroupChooserFrame = new VerbGroupChooserFrame(this);
         }
@@ -100,7 +117,7 @@ public class MainFrame extends JFrame {
         setVisible(false);
     }
 
-    private void timePressed(ActionEvent e) {
+    private void timePressed() {
         if (timePracticeFrame == null) {
             timePracticeFrame = new TimePracticeFrame(this);
         }

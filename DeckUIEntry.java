@@ -16,6 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 
+import resources.ResourceManager;
+import swingcustom.BasicLabel;
+import swingcustom.FontsAndColors;
+import swingcustom.HeaderLabel;
+
 public class DeckUIEntry extends JPanel implements MouseListener, Comparable<DeckUIEntry> {
 
     private boolean isFolder;
@@ -30,14 +35,17 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
     public DeckUIEntry(DeckChooserFrame parent, File file) {
         this.parent = parent;
         this.file = file;
+        setBackground(FontsAndColors.COLOR_DARK_BACKGROUND);
+        setForeground(FontsAndColors.COLOR_DARK_FOREGROUND);
+        setOpaque(true);
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         addMouseListener(this);
         isFolder = file.isDirectory();
         ImageIcon icon;
         if (isFolder) {
-            icon = IconManager.get("folder.png");
+            icon = ResourceManager.getImage("folder.png");
         } else {
-            icon = IconManager.get("deck.png");
+            icon = ResourceManager.getImage("deck.png");
         }
         if (icon == null) {
             add(new JLabel("ERROR"));
@@ -70,8 +78,9 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
                 containsDueCards = true;
             }
         }
-        add(new JLabel(desc));
-        dueIcon = new JLabel(IconManager.get("due.png"));
+        JLabel label = new BasicLabel(desc);
+        add(label);
+        dueIcon = new JLabel(ResourceManager.getImage("due.png"));
         dueIcon.setBorder(new EmptyBorder(16, 8, 16, 8));
         dueIcon.setToolTipText("Cards are due for study");
         add(dueIcon);

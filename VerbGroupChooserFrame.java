@@ -10,6 +10,8 @@ import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+import swingcustom.FontsAndColors;
+
 public class VerbGroupChooserFrame extends JFrame implements WindowListener {
     
     private final JFrame parent;
@@ -28,6 +30,7 @@ public class VerbGroupChooserFrame extends JFrame implements WindowListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setPreferredSize(new Dimension(400, 300));
+        scrollPane.setBackground(FontsAndColors.APP_BACKGROUND);
 
         add(scrollPane);
 
