@@ -25,9 +25,7 @@ public class VerbGroupUIEntry extends JPanel implements MouseListener, Comparabl
         setOpaque(true);
         setBackground(FontsAndColors.APP_BACKGROUND);
 
-        JLabel label;
-        add(label = new BasicLabel(verbGroup.getDescription()));
-        // setBackground(label.getBackground());
+        add(new BasicLabel(verbGroup.getDescription()));
         
         add(Box.createHorizontalGlue()); // left-align
 
