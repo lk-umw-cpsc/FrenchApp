@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
@@ -93,6 +94,8 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         rowContainer.setOpaque(true);
         rowContainer.setBackground(FontsAndColors.APP_BACKGROUND);
         rowContainer.setBorder(new EmptyBorder(24, 8, 16, 8));
+        outerLayer = rowContainer;
+        outerDefault = rowContainer.getBackground();
 
         Box row;
 
@@ -108,6 +111,8 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             promptLabel = new PromptLabel("000 000 000 000");
             defaultFontColor = promptLabel.getForeground();
             promptLabel.setFont(promptLabel.getFont().deriveFont(24.0f));
+            innerLayer = promptLabel;
+            innerDefault = promptLabel.getBackground();
             row.add(Box.createHorizontalGlue());
             row.add(promptLabel);
             row.add(Box.createHorizontalGlue());
@@ -244,14 +249,22 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             return;
         }
         if (input.equals(answer)) {
-            inputField.setEnabled(false);
-            promptLabel.setText("Correct!");
-            promptLabel.setForeground(FONT_COLOR_CORRECT);
-            revalidate();
-            repaint();
+            // inputField.setEnabled(false);
+            // promptLabel.setText("Correct!");
+            // promptLabel.setForeground(FONT_COLOR_CORRECT);
+            // revalidate();
+            // repaint();
+            if (animationThread == null) {
+                animationThread = new Thread(this::animateCorrect);
+                animationThread.start();
+            }
             new Thread(this::waitThenPickNext).start();
         } else {
             System.out.println("Expected: " + answer);
+            if (animationThread == null) {
+                animationThread = new Thread(this::animateIncorrect);
+                animationThread.start();
+            }
             return;
         }
     }
@@ -276,9 +289,72 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
 
     private void waitThenPickNext() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {}
         SwingUtilities.invokeLater(this::pickNext);
+    }
+
+    private Color innerDefault, outerDefault;
+    private Component innerLayer, outerLayer;
+    private Thread animationThread;
+    private void animate(Color innerTo, Color outerTo) {
+
+        double step = 1.0 / 60 * 10;
+        double d = step;
+        int wait = 1000 / 60;
+        Color innerColor = innerDefault;
+        Color outerColor = outerDefault;
+
+        while (d < 1.0) {
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {}
+            Color newInner = interpolate(innerColor, innerTo, d);
+            Color newOuter = interpolate(outerColor, outerTo, d);
+            SwingUtilities.invokeLater(() -> {
+                innerLayer.setBackground(newInner);
+                outerLayer.setBackground(newOuter);
+            });
+            d += step;
+        }
+        d = step;
+        while (d < 1.0) {
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {}
+            Color newInner = interpolate(innerTo, innerColor, d);
+            Color newOuter = interpolate(outerTo, outerColor, d);
+            SwingUtilities.invokeLater(() -> {
+                innerLayer.setBackground(newInner);
+                outerLayer.setBackground(newOuter);
+            });
+            d += step;
+        }
+        animationThread = null;
+    }
+
+    public void animateCorrect() {
+        animate(FontsAndColors.COLOR_DARK_BACKGROUND_CORRECT, FontsAndColors.COLOR_APP_BACKGROUND_CORRECT);
+    }
+
+    public void animateIncorrect() {
+        animate(FontsAndColors.COLOR_DARK_BACKGROUND_INCORRECT, FontsAndColors.COLOR_APP_BACKGROUND_INCORRECT);
+    }
+
+    private Color interpolate(Color from, Color to, double f) {
+        int r = from.getRed();
+        int g = from.getGreen();
+        int b = from.getBlue();
+
+        int dr = to.getRed() - r;
+        int dg = to.getGreen() - g;
+        int db = to.getBlue() - b;
+
+        return new Color(
+            (int)(r + f * dr),
+            (int)(g + f * dg),
+            (int)(b + f * db)
+        );
     }
 
     @Override

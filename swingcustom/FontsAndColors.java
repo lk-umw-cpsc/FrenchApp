@@ -24,6 +24,11 @@ public class FontsAndColors {
     public static final Color COLOR_DARK_BACKGROUND_HIGHLIGHT = hex("#453AA8");
 
     public static final Color COLOR_DARK_BACKGROUND_CORRECT = hex("#297026");
+    public static final Color COLOR_APP_BACKGROUND_CORRECT = hex("#43BF3D");
+
+    public static final Color COLOR_DARK_BACKGROUND_INCORRECT = hex("#702626");
+    public static final Color COLOR_APP_BACKGROUND_INCORRECT = hex("#BF3D3D");
+
 
     public static final Color APP_BACKGROUND = COLOR_B;
 

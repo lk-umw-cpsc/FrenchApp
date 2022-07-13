@@ -11,6 +11,7 @@ public class Main {
 
     private static void initializeOSLookAndFeel() {
         try {
+            System.setProperty( "apple.awt.application.appearance", "system" );
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException
                     | IllegalAccessException | UnsupportedLookAndFeelException e) {

@@ -1,6 +1,6 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -12,11 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,16 +24,23 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import swingcustom.BasicLabel;
+import swingcustom.CustomButton;
+import swingcustom.CustomCheckBox;
+import swingcustom.CustomRadioButton;
+import swingcustom.CustomTextField;
+import swingcustom.FontsAndColors;
+
 public class VocabFrame extends JFrame implements WindowListener {
 
     private static final int CONTENT_PANE_PADDING = 16;
 
-    private static final String CORRECT_ANSWER_COLOR = "#00c800";
-    private static final String INCORRECT_ANSWER_COLOR = "#c80000";
+    private static final String CORRECT_ANSWER_COLOR = "#a3ffbc";
+    private static final String INCORRECT_ANSWER_COLOR = "#ffa3a3";
 
-    private static final String COLOR_GENDER_NEUTRAL = "#000000";
-    private static final String COLOR_MASCULINE = "#0a00c2";
-    private static final String COLOR_FEMININE = "#cc00c2";
+    private static final String COLOR_GENDER_NEUTRAL = "#ffffff";
+    private static final String COLOR_MASCULINE = "#a3ccff";
+    private static final String COLOR_FEMININE = "#ffa3f3";
 
     private static final int CHARACTER_COUNT_CUTOFF = 28;
 
@@ -92,18 +97,20 @@ public class VocabFrame extends JFrame implements WindowListener {
 
         optionsPane = Box.createVerticalBox();
         optionsPane.setBorder(new EmptyBorder(CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING));
+        optionsPane.setOpaque(true);
+        optionsPane.setBackground(FontsAndColors.APP_BACKGROUND);
 
         Box layer = Box.createHorizontalBox();
-            layer.add(new JLabel("Show side:"));
+            layer.add(new BasicLabel("Show side:"));
             layer.add(Box.createHorizontalGlue());
         optionsPane.add(layer);
 
         layer = Box.createHorizontalBox();
-            showEnglish = new JRadioButton("English (hard)");
+            showEnglish = new CustomRadioButton("English (hard)");
             layer.add(showEnglish);
-            showFrench = new JRadioButton("French (easy)");
+            showFrench = new CustomRadioButton("French (easy)");
             layer.add(showFrench);
-            showBoth = new JRadioButton("Both (random)");
+            showBoth = new CustomRadioButton("Both (random)");
             layer.add(showBoth);
 
             sideChoice = new ButtonGroup();
@@ -120,34 +127,42 @@ public class VocabFrame extends JFrame implements WindowListener {
         optionsPane.add(Box.createHorizontalStrut(CONTENT_PANE_PADDING));
 
         layer = Box.createHorizontalBox();
-            layer.add(new JLabel("Additonal options:"));
+            layer.add(new BasicLabel("Additonal options:"));
             layer.add(Box.createHorizontalGlue());
         optionsPane.add(layer);
 
         layer = Box.createHorizontalBox();
-            showGenderHintsOption = new JCheckBox("Show gender hints");
+            showGenderHintsOption = new CustomCheckBox("Show gender hints");
             showGenderHintsOption.setSelected(true);
             layer.add(showGenderHintsOption);
             layer.add(Box.createHorizontalGlue());
         optionsPane.add(layer);
 
-        JButton startButton = new JButton("Start!");
-        Dimension d = startButton.getPreferredSize();
-        startButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)d.getHeight()));
-        startButton.addActionListener(this::startButtonPressed);
-        optionsPane.add(startButton);
+        layer = Box.createHorizontalBox();
+            CustomButton startButton = new CustomButton("Start!");
+            Dimension d = startButton.getPreferredSize();
+            startButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, (int)d.getHeight()));
+            startButton.addButtonListener(this::startButtonPressed);
+            layer.add(startButton);
+        optionsPane.add(layer);
 
         add(optionsPane);
 
         flashcardsPane = Box.createVerticalBox();
+        flashcardsPane.setOpaque(true);
+        flashcardsPane.setBackground(FontsAndColors.APP_BACKGROUND);
+        outerLayer = flashcardsPane;
+        outerDefault = flashcardsPane.getBackground();
 
         flashcardsPane.setBorder(new EmptyBorder(CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING));
 
             JPanel flashcard = new JPanel();
             flashcard.setPreferredSize(new Dimension(600, 300));
-            flashcard.setBackground(Color.WHITE);
-            flashcard.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+            flashcard.setBackground(FontsAndColors.COLOR_DARK_BACKGROUND);
+            // flashcard.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
             flashcardsPane.add(flashcard);
+            innerLayer = flashcard;
+            innerDefault = flashcard.getBackground();
 
             Box textContainer = Box.createVerticalBox();
             textContainer.add(Box.createVerticalStrut(120));
@@ -155,7 +170,7 @@ public class VocabFrame extends JFrame implements WindowListener {
             Box flashcardTextContainer = Box.createHorizontalBox();
             flashcardTextContainer.add(Box.createHorizontalGlue());
             flashcardLabel = new JLabel();
-            flashcardLabel.setFont(new Font("Helvetica", 0, 48));
+            flashcardLabel.setFont(FontsAndColors.FONT_PROMPT.deriveFont(48f));
             flashcardTextContainer.add(flashcardLabel);
             flashcardTextContainer.add(Box.createHorizontalGlue());
             textContainer.add(flashcardTextContainer);
@@ -164,10 +179,10 @@ public class VocabFrame extends JFrame implements WindowListener {
             
             flashcard.add(textContainer);
 
-        flashcardsPane.add(answerField = new JTextField());
+        flashcardsPane.add(answerField = new CustomTextField(1));
         answerField.addActionListener(this::answerSubmitted);
-        answerField.setFont(new Font("Helvetica", 0, 24));
-        answerField.setHorizontalAlignment(JTextField.CENTER);
+        // answerField.setFont(new Font("Helvetica", 0, 24));
+        // answerField.setHorizontalAlignment(JTextField.CENTER);
 
         flashcardsPane.setVisible(false);
         
@@ -176,7 +191,7 @@ public class VocabFrame extends JFrame implements WindowListener {
         pack();
     }
 
-    private void startButtonPressed(ActionEvent e) {
+    private void startButtonPressed() {
         if (showEnglish.isSelected()) {
             mode = FlashCardStudyMode.SHOW_ENGLISH;
         } else if(showFrench.isSelected()) {
@@ -214,6 +229,8 @@ public class VocabFrame extends JFrame implements WindowListener {
         String color;
         String answerText;
         if (currentCard.checkAnswer(sideShownIsFrench, input)) {
+            animationThread = new Thread(this::animateCorrect);
+            animationThread.start();
             answerText = input;
             color = CORRECT_ANSWER_COLOR;
             if (reviewingMistakes) {
@@ -222,6 +239,8 @@ public class VocabFrame extends JFrame implements WindowListener {
                 currentCard.updateDueDate(FlashCard.ANSWER_CORRECT);
             }
         } else {
+            animationThread = new Thread(this::animateIncorrect);
+            animationThread.start();
             color = INCORRECT_ANSWER_COLOR;
             answerText = answer;
             incorrectPile.add(currentCard);
@@ -266,7 +285,8 @@ public class VocabFrame extends JFrame implements WindowListener {
         Boolean gender = currentCard.getGender();
         String color = COLOR_GENDER_NEUTRAL;
         if (!showGender || gender == FlashCard.NONE) {
-            // flashcardLabel.setForeground(COLOR_GENDER_NEUTRAL);
+            // flashcardLabel.setForeground(COLOR_GENDER_NEUTRAL);\
+            color = COLOR_GENDER_NEUTRAL;
         } else if (gender == FlashCard.MALE) {
             color = COLOR_MASCULINE;
         } else {
@@ -313,6 +333,69 @@ public class VocabFrame extends JFrame implements WindowListener {
         }
         html += currentLine;
         return html;
+    }
+
+    private Color innerDefault, outerDefault;
+    private Component innerLayer, outerLayer;
+    private Thread animationThread;
+    private void animate(Color innerTo, Color outerTo) {
+
+        double step = 1.0 / 60 * 10;
+        double d = step;
+        int wait = 1000 / 60;
+        Color innerColor = innerDefault;
+        Color outerColor = outerDefault;
+
+        while (d < 1.0) {
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {}
+            Color newInner = interpolate(innerColor, innerTo, d);
+            Color newOuter = interpolate(outerColor, outerTo, d);
+            SwingUtilities.invokeLater(() -> {
+                innerLayer.setBackground(newInner);
+                outerLayer.setBackground(newOuter);
+            });
+            d += step;
+        }
+        d = step;
+        while (d < 1.0) {
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException e) {}
+            Color newInner = interpolate(innerTo, innerColor, d);
+            Color newOuter = interpolate(outerTo, outerColor, d);
+            SwingUtilities.invokeLater(() -> {
+                innerLayer.setBackground(newInner);
+                outerLayer.setBackground(newOuter);
+            });
+            d += step;
+        }
+        animationThread = null;
+    }
+
+    public void animateCorrect() {
+        animate(FontsAndColors.COLOR_DARK_BACKGROUND_CORRECT, FontsAndColors.COLOR_APP_BACKGROUND_CORRECT);
+    }
+
+    public void animateIncorrect() {
+        animate(FontsAndColors.COLOR_DARK_BACKGROUND_INCORRECT, FontsAndColors.COLOR_APP_BACKGROUND_INCORRECT);
+    }
+
+    private Color interpolate(Color from, Color to, double f) {
+        int r = from.getRed();
+        int g = from.getGreen();
+        int b = from.getBlue();
+
+        int dr = to.getRed() - r;
+        int dg = to.getGreen() - g;
+        int db = to.getBlue() - b;
+
+        return new Color(
+            (int)(r + f * dr),
+            (int)(g + f * dg),
+            (int)(b + f * db)
+        );
     }
 
     @Override
