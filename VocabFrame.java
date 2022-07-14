@@ -76,12 +76,20 @@ public class VocabFrame extends JFrame implements WindowListener {
 
     private String promptText;
     
+    private Component[] animatedComponents;
+    private Color[] colorsFrom, colorsCorrect, colorsIncorrect;
+    
     public VocabFrame(Deck deck, JFrame parent) {
         super("Pratiquer " + deck.getDescription());
         this.deck = deck;
 
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);
+        
+        animatedComponents = new Component[2];
+        colorsFrom = new Color[2];
+        colorsCorrect = new Color[2];
+        colorsIncorrect = new Color[2];
 
         dueCardsRemaining = deck.getDueCards();
         if (dueCardsRemaining.isEmpty()) {
@@ -151,8 +159,10 @@ public class VocabFrame extends JFrame implements WindowListener {
         flashcardsPane = Box.createVerticalBox();
         flashcardsPane.setOpaque(true);
         flashcardsPane.setBackground(FontsAndColors.APP_BACKGROUND);
-        outerLayer = flashcardsPane;
-        outerDefault = flashcardsPane.getBackground();
+        animatedComponents[0] = flashcardsPane;
+        colorsFrom[0] = flashcardsPane.getBackground();
+        colorsCorrect[0] = FontsAndColors.COLOR_APP_BACKGROUND_CORRECT;
+        colorsIncorrect[0] = FontsAndColors.COLOR_APP_BACKGROUND_INCORRECT;
 
         flashcardsPane.setBorder(new EmptyBorder(CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING, CONTENT_PANE_PADDING));
 
@@ -161,8 +171,10 @@ public class VocabFrame extends JFrame implements WindowListener {
             flashcard.setBackground(FontsAndColors.COLOR_DARK_BACKGROUND);
             // flashcard.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
             flashcardsPane.add(flashcard);
-            innerLayer = flashcard;
-            innerDefault = flashcard.getBackground();
+            animatedComponents[1] = flashcard;
+            colorsFrom[1] = flashcard.getBackground();
+            colorsCorrect[1] = FontsAndColors.COLOR_DARK_BACKGROUND_CORRECT;
+            colorsIncorrect[1] = FontsAndColors.COLOR_DARK_BACKGROUND_INCORRECT;
 
             Box textContainer = Box.createVerticalBox();
             textContainer.add(Box.createVerticalStrut(120));
@@ -229,8 +241,7 @@ public class VocabFrame extends JFrame implements WindowListener {
         String color;
         String answerText;
         if (currentCard.checkAnswer(sideShownIsFrench, input)) {
-            animationThread = new Thread(this::animateCorrect);
-            animationThread.start();
+            ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsCorrect);
             answerText = input;
             color = CORRECT_ANSWER_COLOR;
             if (reviewingMistakes) {
@@ -239,8 +250,7 @@ public class VocabFrame extends JFrame implements WindowListener {
                 currentCard.updateDueDate(FlashCard.ANSWER_CORRECT);
             }
         } else {
-            animationThread = new Thread(this::animateIncorrect);
-            animationThread.start();
+            ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsIncorrect);
             color = INCORRECT_ANSWER_COLOR;
             answerText = answer;
             incorrectPile.add(currentCard);
@@ -333,69 +343,6 @@ public class VocabFrame extends JFrame implements WindowListener {
         }
         html += currentLine;
         return html;
-    }
-
-    private Color innerDefault, outerDefault;
-    private Component innerLayer, outerLayer;
-    private Thread animationThread;
-    private void animate(Color innerTo, Color outerTo) {
-
-        double step = 1.0 / 60 * 10;
-        double d = step;
-        int wait = 1000 / 60;
-        Color innerColor = innerDefault;
-        Color outerColor = outerDefault;
-
-        while (d < 1.0) {
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {}
-            Color newInner = interpolate(innerColor, innerTo, d);
-            Color newOuter = interpolate(outerColor, outerTo, d);
-            SwingUtilities.invokeLater(() -> {
-                innerLayer.setBackground(newInner);
-                outerLayer.setBackground(newOuter);
-            });
-            d += step;
-        }
-        d = step;
-        while (d < 1.0) {
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {}
-            Color newInner = interpolate(innerTo, innerColor, d);
-            Color newOuter = interpolate(outerTo, outerColor, d);
-            SwingUtilities.invokeLater(() -> {
-                innerLayer.setBackground(newInner);
-                outerLayer.setBackground(newOuter);
-            });
-            d += step;
-        }
-        animationThread = null;
-    }
-
-    public void animateCorrect() {
-        animate(FontsAndColors.COLOR_DARK_BACKGROUND_CORRECT, FontsAndColors.COLOR_APP_BACKGROUND_CORRECT);
-    }
-
-    public void animateIncorrect() {
-        animate(FontsAndColors.COLOR_DARK_BACKGROUND_INCORRECT, FontsAndColors.COLOR_APP_BACKGROUND_INCORRECT);
-    }
-
-    private Color interpolate(Color from, Color to, double f) {
-        int r = from.getRed();
-        int g = from.getGreen();
-        int b = from.getBlue();
-
-        int dr = to.getRed() - r;
-        int dg = to.getGreen() - g;
-        int db = to.getBlue() - b;
-
-        return new Color(
-            (int)(r + f * dr),
-            (int)(g + f * dg),
-            (int)(b + f * db)
-        );
     }
 
     @Override

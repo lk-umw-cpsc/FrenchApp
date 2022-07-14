@@ -18,7 +18,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import swingcustom.CustomTextField;
@@ -60,6 +59,9 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     private final Random rng;
     private String answer;
     private FrenchNumber currentNumber;
+
+    private Component[] animatedComponents;
+    private Color[] colorsFrom, colorsCorrect, colorsIncorrect;
     
     public NumberPracticeFrame(JFrame parent, int choice) {
         super("Pratiquer les nombres");
@@ -89,13 +91,21 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setResizable(false);
         addWindowListener(this);
+        
+        animatedComponents = new Component[2];
+        colorsFrom = new Color[2];
+        colorsCorrect = new Color[2];
+        colorsIncorrect = new Color[2];
 
         Box rowContainer = Box.createVerticalBox();
         rowContainer.setOpaque(true);
         rowContainer.setBackground(FontsAndColors.APP_BACKGROUND);
         rowContainer.setBorder(new EmptyBorder(24, 8, 16, 8));
-        outerLayer = rowContainer;
-        outerDefault = rowContainer.getBackground();
+
+        animatedComponents[0] = rowContainer;
+        colorsFrom[0] = rowContainer.getBackground();
+        colorsCorrect[0] = FontsAndColors.COLOR_APP_BACKGROUND_CORRECT;
+        colorsIncorrect[0] = FontsAndColors.COLOR_APP_BACKGROUND_INCORRECT;
 
         Box row;
 
@@ -111,8 +121,10 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             promptLabel = new PromptLabel("000 000 000 000");
             defaultFontColor = promptLabel.getForeground();
             promptLabel.setFont(promptLabel.getFont().deriveFont(24.0f));
-            innerLayer = promptLabel;
-            innerDefault = promptLabel.getBackground();
+            animatedComponents[1] = promptLabel;
+            colorsFrom[1] = promptLabel.getBackground();
+            colorsCorrect[1] = FontsAndColors.COLOR_DARK_BACKGROUND_CORRECT;
+            colorsIncorrect[1] = FontsAndColors.COLOR_DARK_BACKGROUND_INCORRECT;
             row.add(Box.createHorizontalGlue());
             row.add(promptLabel);
             row.add(Box.createHorizontalGlue());
@@ -254,17 +266,11 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             // promptLabel.setForeground(FONT_COLOR_CORRECT);
             // revalidate();
             // repaint();
-            if (animationThread == null) {
-                animationThread = new Thread(this::animateCorrect);
-                animationThread.start();
-            }
-            new Thread(this::waitThenPickNext).start();
+            ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsCorrect);
+            pickNext();
         } else {
             System.out.println("Expected: " + answer);
-            if (animationThread == null) {
-                animationThread = new Thread(this::animateIncorrect);
-                animationThread.start();
-            }
+            ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsIncorrect);
             return;
         }
     }
@@ -285,76 +291,6 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         inputField.setText("");
         inputField.setEnabled(true);
         pack();
-    }
-
-    private void waitThenPickNext() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {}
-        SwingUtilities.invokeLater(this::pickNext);
-    }
-
-    private Color innerDefault, outerDefault;
-    private Component innerLayer, outerLayer;
-    private Thread animationThread;
-    private void animate(Color innerTo, Color outerTo) {
-
-        double step = 1.0 / 60 * 10;
-        double d = step;
-        int wait = 1000 / 60;
-        Color innerColor = innerDefault;
-        Color outerColor = outerDefault;
-
-        while (d < 1.0) {
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {}
-            Color newInner = interpolate(innerColor, innerTo, d);
-            Color newOuter = interpolate(outerColor, outerTo, d);
-            SwingUtilities.invokeLater(() -> {
-                innerLayer.setBackground(newInner);
-                outerLayer.setBackground(newOuter);
-            });
-            d += step;
-        }
-        d = step;
-        while (d < 1.0) {
-            try {
-                Thread.sleep(wait);
-            } catch (InterruptedException e) {}
-            Color newInner = interpolate(innerTo, innerColor, d);
-            Color newOuter = interpolate(outerTo, outerColor, d);
-            SwingUtilities.invokeLater(() -> {
-                innerLayer.setBackground(newInner);
-                outerLayer.setBackground(newOuter);
-            });
-            d += step;
-        }
-        animationThread = null;
-    }
-
-    public void animateCorrect() {
-        animate(FontsAndColors.COLOR_DARK_BACKGROUND_CORRECT, FontsAndColors.COLOR_APP_BACKGROUND_CORRECT);
-    }
-
-    public void animateIncorrect() {
-        animate(FontsAndColors.COLOR_DARK_BACKGROUND_INCORRECT, FontsAndColors.COLOR_APP_BACKGROUND_INCORRECT);
-    }
-
-    private Color interpolate(Color from, Color to, double f) {
-        int r = from.getRed();
-        int g = from.getGreen();
-        int b = from.getBlue();
-
-        int dr = to.getRed() - r;
-        int dg = to.getGreen() - g;
-        int db = to.getBlue() - b;
-
-        return new Color(
-            (int)(r + f * dr),
-            (int)(g + f * dg),
-            (int)(b + f * db)
-        );
     }
 
     @Override

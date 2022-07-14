@@ -42,7 +42,7 @@ quarante,moins vingt
 quarante et un
 quarante-deux
 quarante-trois
-quarante-quatre,moins le quart
+quarante-quatre
 quarante-cinq
 quarante-six
 quarante-sept

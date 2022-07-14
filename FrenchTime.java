@@ -112,8 +112,15 @@ public class FrenchTime {
             minuteOptions = frenchMinutes[minute];
         }
 
-        final int numAnswers = minuteOptions.length;
+        int numAnswers = minuteOptions.length;
+        if (minute == 45) {
+            numAnswers += 1;
+        }
         String[] possibleAnswers = new String[numAnswers];
+        if (minute == 45) {
+            possibleAnswers[numAnswers - 1] = frenchHours[(hour + 1) % 24] + " moins le quart";
+            numAnswers--;
+        }
         for (int i = 0; i < numAnswers; i++) {
             if (minute == 0) {
                 possibleAnswers[0] = h;
