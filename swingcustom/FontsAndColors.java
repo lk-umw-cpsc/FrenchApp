@@ -29,12 +29,14 @@ public class FontsAndColors {
     public static final Color COLOR_DARK_BACKGROUND_INCORRECT = hex("#702626");
     public static final Color COLOR_APP_BACKGROUND_INCORRECT = hex("#BF3D3D");
 
+    public static final Color COLOR_REVEALED_ANSWER_BACKGROUND = new Color(255, 212, 138);
 
     public static final Color APP_BACKGROUND = COLOR_B;
 
     public static final Font FONT_INPUT = FONT_LIGHT.deriveFont(20f);
     public static final Font FONT_HEADING = FONT_THIN.deriveFont(18f);
     public static final Font FONT_BUTTON = FONT_REGULAR.deriveFont(24f);
+    public static final Font FONT_BUTTON_SMALL = FONT_REGULAR.deriveFont(16f);
     public static final Font FONT_PROMPT = FONT_REGULAR.deriveFont(24f);
     public static final Font FONT_BASIC_COMPONENT = FONT_LIGHT.deriveFont(16f);
 

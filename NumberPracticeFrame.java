@@ -47,6 +47,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
 
     private static final Color FONT_COLOR_CORRECT = new Color(0, 189, 0);
     private final Color defaultFontColor;
+    private final Color defaultInputFieldBackgroundColor;
 
     private static final int REVEAL_STATE_UNREVEALED = 0;
     private static final int REVEAL_STATE_REVEALED = 1;
@@ -141,13 +142,14 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         rowContainer.add(Box.createVerticalStrut(4));
 
             inputField = new CustomTextField(32);
+            defaultInputFieldBackgroundColor = inputField.getBackground();
             inputField.addActionListener(this::inputSubmitted);
             Dimension pref = inputField.getPreferredSize();
             inputField.setMaximumSize(new Dimension(Integer.MAX_VALUE, pref.height));
         rowContainer.add(inputField);
 
         row = Box.createHorizontalBox();
-            checkAnswerButton = new CustomButton("Check Answer");
+            checkAnswerButton = new CustomButtonSmall("Check Answer");
             checkAnswerButton.addButtonListener(this::checkAnswerButtonPressed);
             row.add(checkAnswerButton);
             Dimension size = checkAnswerButton.getPreferredSize();
@@ -158,7 +160,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         rowContainer.add(Box.createVerticalStrut(4));
 
         row = Box.createHorizontalBox();
-            revealAnswerButton = new CustomButton("Reveal Answer");
+            revealAnswerButton = new CustomButtonSmall("Reveal Answer");
             revealAnswerButton.addButtonListener(this::revealAnswerButtonPressed);
             row.add(revealAnswerButton);
             size = revealAnswerButton.getPreferredSize();
@@ -283,6 +285,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
 
     private void revealAnswerButtonPressed() {
         if (revealState == REVEAL_STATE_UNREVEALED) {
+            inputField.setBackground(FontsAndColors.COLOR_REVEALED_ANSWER_BACKGROUND);
             inputField.setEnabled(false);
             inputField.setText(answer);
             checkAnswerButton.setEnabled(false);
@@ -315,9 +318,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsCorrect);
             pickNext();
         } else {
-            System.out.println("Expected: " + answer);
             ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsIncorrect);
-            return;
         }
     }
 
@@ -337,6 +338,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         promptLabel.setText(promptText);
         inputField.setText("");
         inputField.setEnabled(true);
+        inputField.setBackground(defaultInputFieldBackgroundColor);
         checkAnswerButton.setEnabled(true);
         revealAnswerButton.setEnabled(true);
         revealAnswerButton.setText("Reveal Answer");

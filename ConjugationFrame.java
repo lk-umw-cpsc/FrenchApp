@@ -1,17 +1,24 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -22,7 +29,7 @@ import swingcustom.CustomTextField;
 import swingcustom.FontsAndColors;
 import swingcustom.HeaderLabel;
 
-public class ConjugationFrame extends JFrame implements WindowListener {
+public class ConjugationFrame extends JFrame implements WindowListener, MouseListener {
     
     private final JFrame parent;
 
@@ -40,15 +47,22 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
     private final Color CORRECT_ANSWER_COLOR = new Color(198, 255, 189);
     private final Color INCORRECT_ANSWER_COLOR = new Color(255, 189, 189);
+    private final Color REVEALED_ANSWER_COLOR = FontsAndColors.COLOR_REVEALED_ANSWER_BACKGROUND;
     private final Color DEFAULT_COLOR;
 
     private List<Verb> remainingVerbs;
+    private Map<JTextField, Integer> textfieldToIndexMap;
+
+    private JPopupMenu rightClickMenu;
+    private JTextField rightClickTarget;
 
     public ConjugationFrame(JFrame parent, VerbGroup verbGroup) {
         super("Pratiquer les conjugaisons");
         this.parent = parent;
 
         rng = new Random();
+
+        textfieldToIndexMap = new HashMap<>();
 
         remainingVerbs = new ArrayList<>();
         for (Verb v : verbGroup.getVerbs()) {
@@ -61,6 +75,11 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         setResizable(false);
+
+        rightClickMenu = new JPopupMenu();
+        JMenuItem revealOption = new JMenuItem("Reveal answer");
+        revealOption.addActionListener(this::revealOptionChosen);
+        rightClickMenu.add(revealOption);
 
         Box row;
 
@@ -107,7 +126,9 @@ public class ConjugationFrame extends JFrame implements WindowListener {
             JTextField tf = new CustomTextField(8);
             tf.setFont(tf.getFont().deriveFont(16f));
             tf.addActionListener(this::formSubmitted);
+            tf.addMouseListener(this);
             inputFields[left] = tf;
+            textfieldToIndexMap.put(tf, left);
             row.add(tf);
             row.add(Box.createHorizontalGlue());
             if (right < numColumns) {
@@ -116,8 +137,10 @@ public class ConjugationFrame extends JFrame implements WindowListener {
                 tf = new CustomTextField(8);
                 tf.setFont(tf.getFont().deriveFont(16f));
                 tf.setMaximumSize(tf.getPreferredSize());
+                tf.addMouseListener(this);
                 tf.addActionListener(this::formSubmitted);
                 inputFields[right] = tf;
+                textfieldToIndexMap.put(tf, right);
                 row.add(tf);
             } else {
                 tf.setMaximumSize(tf.getPreferredSize());
@@ -152,6 +175,13 @@ public class ConjugationFrame extends JFrame implements WindowListener {
         formSubmitted(null);
     }
 
+    private void revealOptionChosen(ActionEvent e) {
+        int index = textfieldToIndexMap.get(rightClickTarget);
+        rightClickTarget.setEnabled(false);
+        rightClickTarget.setText(answer.getConjugation(columns[index]));
+        rightClickTarget.setBackground(REVEALED_ANSWER_COLOR);
+    }
+
     private void formSubmitted(ActionEvent e) {
         boolean correct = true;
 
@@ -159,6 +189,9 @@ public class ConjugationFrame extends JFrame implements WindowListener {
 
         for (int i = 0, numFields = inputFields.length; i < numFields; i++) {
             JTextField tf = inputFields[i];
+            if (!tf.isEnabled()) {
+                continue;
+            }
             if (tf.getText().equals(answer.getConjugation(columns[i]))) {
                 tf.setBackground(CORRECT_ANSWER_COLOR);
                 tf.setEnabled(false);
@@ -254,5 +287,28 @@ public class ConjugationFrame extends JFrame implements WindowListener {
     @Override
     public void windowDeactivated(WindowEvent e) {
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            if (!((Component)e.getSource()).isEnabled()) {
+                return;
+            }
+            rightClickTarget = (JTextField)e.getSource();
+            rightClickMenu.show((Component)e.getSource(), e.getX(), e.getY());
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
 
 }

@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Box;
@@ -9,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import swingcustom.BasicLabel;
+import swingcustom.CustomButton;
 import swingcustom.CustomTextField;
 import swingcustom.FontsAndColors;
 import swingcustom.PromptLabel;
@@ -17,6 +19,9 @@ import swingextended.AutoShowParentFrame;
 
 public class TimePracticeFrame extends AutoShowParentFrame {
     
+    private static final int REVEAL_STATE_UNREVEALED = 0;
+    private static final int REVEAL_STATE_REVEALED = 1;
+
     private JLabel timeLabel;
     private JTextField inputField;
 
@@ -24,6 +29,13 @@ public class TimePracticeFrame extends AutoShowParentFrame {
 
     private Component[] animatedComponents;
     private Color[] colorsFrom, colorsCorrect, colorsIncorrect;
+
+    private Color defaultInputFieldBackgroundColor;
+
+    private CustomButton checkAnswerButton;
+    private CustomButton revealAnswerButton;
+
+    private int revealState;
 
     public TimePracticeFrame(JFrame parent) {
         super(parent, "Quelle heure est-il?");
@@ -70,11 +82,32 @@ public class TimePracticeFrame extends AutoShowParentFrame {
         row = Box.createHorizontalBox();
             row.add(Box.createHorizontalGlue());
             row.add(new BasicLabel("Il est "));
-            inputField = new CustomTextField(16);
+            inputField = new CustomTextField(24);
             inputField.addActionListener(this::inputSubmitted);
+            defaultInputFieldBackgroundColor = inputField.getBackground();
             row.add(inputField);
             row.add(new BasicLabel("."));
             row.add(Box.createHorizontalGlue());
+        rowContainer.add(row);
+
+        row = Box.createHorizontalBox();
+            checkAnswerButton = new CustomButtonSmall("Check Answer");
+            Dimension size = checkAnswerButton.getPreferredSize();
+            checkAnswerButton.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+                    size.height));
+            checkAnswerButton.addButtonListener(this::checkAnswerButtonPressed);
+            row.add(checkAnswerButton);
+        rowContainer.add(row);
+
+        rowContainer.add(Box.createVerticalStrut(4));
+
+        row = Box.createHorizontalBox();
+            revealAnswerButton = new CustomButtonSmall("Reveal Answer");
+            size = revealAnswerButton.getPreferredSize();
+            revealAnswerButton.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+                    size.height));
+            revealAnswerButton.addButtonListener(this::revealAnswerButtonPressed);
+            row.add(revealAnswerButton);
         rowContainer.add(row);
 
         add(rowContainer);
@@ -84,7 +117,12 @@ public class TimePracticeFrame extends AutoShowParentFrame {
 
     private void pickNextAnswer() {
         answer = FrenchTime.generateRandomTime();
+        revealState = REVEAL_STATE_UNREVEALED;
         timeLabel.setText(answer.getDisplay());
+        checkAnswerButton.setEnabled(true);
+        revealAnswerButton.setText("Reveal Answer");
+        inputField.setBackground(defaultInputFieldBackgroundColor);
+        inputField.setEnabled(true);
         inputField.setText("");
     }
 
@@ -96,6 +134,23 @@ public class TimePracticeFrame extends AutoShowParentFrame {
         } else {
             ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsIncorrect);
         }
+    }
+
+    private void revealAnswerButtonPressed() {
+        if (revealState == REVEAL_STATE_UNREVEALED) {
+            revealState = REVEAL_STATE_REVEALED;
+            inputField.setEnabled(false);
+            inputField.setBackground(FontsAndColors.COLOR_REVEALED_ANSWER_BACKGROUND);
+            inputField.setText(answer.getPossibleAnswers()[0]);
+            checkAnswerButton.setEnabled(false);
+            revealAnswerButton.setText("Continue");
+        } else {
+            pickNextAnswer();
+        }
+    }
+
+    private void checkAnswerButtonPressed() {
+        inputSubmitted(null);
     }
 
     private void inputSubmitted(ActionEvent e) {
