@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import swingcustom.CustomButton;
 import swingcustom.CustomTextField;
 import swingcustom.FontsAndColors;
 import swingcustom.HeaderLabel;
@@ -47,8 +48,13 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     private static final Color FONT_COLOR_CORRECT = new Color(0, 189, 0);
     private final Color defaultFontColor;
 
+    private static final int REVEAL_STATE_UNREVEALED = 0;
+    private static final int REVEAL_STATE_REVEALED = 1;
+
     private int choice;
     private int range;
+
+    private int revealState;
 
     private boolean usingList;
 
@@ -59,6 +65,9 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
     private final Random rng;
     private String answer;
     private FrenchNumber currentNumber;
+
+    private CustomButton checkAnswerButton;
+    private CustomButton revealAnswerButton;
 
     private Component[] animatedComponents;
     private Color[] colorsFrom, colorsCorrect, colorsIncorrect;
@@ -136,6 +145,26 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             Dimension pref = inputField.getPreferredSize();
             inputField.setMaximumSize(new Dimension(Integer.MAX_VALUE, pref.height));
         rowContainer.add(inputField);
+
+        row = Box.createHorizontalBox();
+            checkAnswerButton = new CustomButton("Check Answer");
+            checkAnswerButton.addButtonListener(this::checkAnswerButtonPressed);
+            row.add(checkAnswerButton);
+            Dimension size = checkAnswerButton.getPreferredSize();
+            checkAnswerButton.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+                    size.height));
+        rowContainer.add(row);
+
+        rowContainer.add(Box.createVerticalStrut(4));
+
+        row = Box.createHorizontalBox();
+            revealAnswerButton = new CustomButton("Reveal Answer");
+            revealAnswerButton.addButtonListener(this::revealAnswerButtonPressed);
+            row.add(revealAnswerButton);
+            size = revealAnswerButton.getPreferredSize();
+            revealAnswerButton.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+                    size.height));
+        rowContainer.add(row);
 
         add(rowContainer);
         if (usingList) {
@@ -252,6 +281,22 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
         return generateNumberString(choice);
     }
 
+    private void revealAnswerButtonPressed() {
+        if (revealState == REVEAL_STATE_UNREVEALED) {
+            inputField.setEnabled(false);
+            inputField.setText(answer);
+            checkAnswerButton.setEnabled(false);
+            revealState = REVEAL_STATE_REVEALED;
+            revealAnswerButton.setText("Continue");
+        } else {
+            pickNext();
+        }
+    }
+
+    private void checkAnswerButtonPressed() {
+        inputSubmitted(null);
+    }
+
     private void inputSubmitted(ActionEvent e) {
         if (!inputField.isEnabled()) {
             return;
@@ -266,6 +311,7 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             // promptLabel.setForeground(FONT_COLOR_CORRECT);
             // revalidate();
             // repaint();
+            revealAnswerButton.setEnabled(false);
             ColorAnimationEngine.tryLockAndAnimateIfUnlocked(animatedComponents, colorsFrom, colorsCorrect);
             pickNext();
         } else {
@@ -286,10 +332,14 @@ public class NumberPracticeFrame extends JFrame implements WindowListener {
             answer = currentNumber.getWordsString();
             promptText = currentNumber.getDigitsString();
         }
+        revealState = REVEAL_STATE_UNREVEALED;
         promptLabel.setForeground(defaultFontColor);
         promptLabel.setText(promptText);
         inputField.setText("");
         inputField.setEnabled(true);
+        checkAnswerButton.setEnabled(true);
+        revealAnswerButton.setEnabled(true);
+        revealAnswerButton.setText("Reveal Answer");
         pack();
     }
 

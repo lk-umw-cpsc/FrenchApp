@@ -14,8 +14,18 @@ public class CustomButton extends LabelButton {
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        if (!enabled) {
+            setBackground(FontsAndColors.COLOR_DARK_BACKGROUND);
+        }
+        super.setEnabled(enabled);
+    }
+
+    @Override
     public void mouseEntered(MouseEvent e) {
-        setBackground(FontsAndColors.COLOR_DARK_BACKGROUND_HIGHLIGHT);
+        if (isEnabled()) {
+            setBackground(FontsAndColors.COLOR_DARK_BACKGROUND_HIGHLIGHT);
+        }
     }
 
     @Override
