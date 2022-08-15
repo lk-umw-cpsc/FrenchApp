@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
     private static final int PADDING = 16;
 
     public MainFrame() {
-        super("French Study Tool by Lauren Knight");
+        super("L'Aigle");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
