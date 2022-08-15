@@ -1,3 +1,3 @@
 #!/bin/bash
 cd "$(dirname "$BASH_SOURCE")"
-java -jar FrenchApp.jar
+java -jar laigle1.2.jar

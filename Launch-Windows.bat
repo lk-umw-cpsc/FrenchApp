@@ -1,2 +1,2 @@
 @echo off
-@javaw -jar FrenchApp.jar
+@javaw -jar laigle1.2.jar
