@@ -1,3 +1,5 @@
+package swingcustom;
+
 import swingcustom.CustomButton;
 import swingcustom.FontsAndColors;
 
