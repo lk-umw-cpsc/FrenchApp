@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import swingcustom.CustomButton;
+import swingcustom.CustomButtonSmall;
 import swingcustom.CustomTextField;
 import swingcustom.FontsAndColors;
 import swingcustom.HeaderLabel;

@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 
 import swingcustom.BasicLabel;
 import swingcustom.CustomButton;
+import swingcustom.CustomButtonSmall;
 import swingcustom.CustomTextField;
 import swingcustom.FontsAndColors;
 import swingcustom.PromptLabel;
