@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -69,6 +70,9 @@ public class VocabFrame extends JFrame implements WindowListener {
     private boolean showGender;
     private FlashCardStudyMode mode;
     private Map<JRadioButton, FlashCardStudyMode> buttonToModeMap = new HashMap<>();
+
+    private Font FONT_STANDARD = FontsAndColors.FONT_PROMPT.deriveFont(48f);
+    private Font FONT_LONG_STRINGS = FontsAndColors.FONT_PROMPT.deriveFont(20f);
 
     private boolean reviewingMistakes;
 
@@ -182,7 +186,7 @@ public class VocabFrame extends JFrame implements WindowListener {
             Box flashcardTextContainer = Box.createHorizontalBox();
             flashcardTextContainer.add(Box.createHorizontalGlue());
             flashcardLabel = new JLabel();
-            flashcardLabel.setFont(FontsAndColors.FONT_PROMPT.deriveFont(48f));
+            flashcardLabel.setFont(FONT_STANDARD);
             flashcardTextContainer.add(flashcardLabel);
             flashcardTextContainer.add(Box.createHorizontalGlue());
             textContainer.add(flashcardTextContainer);
@@ -320,7 +324,12 @@ public class VocabFrame extends JFrame implements WindowListener {
             text = currentCard.getEnglish();
         }
         promptText = "<font color='" + color + "'>";
-        promptText += insertLineBreaks(text) + "</font>";
+        promptText += text + "</font>";
+        if (text.length() >= CHARACTER_COUNT_CUTOFF) {
+            flashcardLabel.setFont(FONT_LONG_STRINGS);
+        } else {
+            flashcardLabel.setFont(FONT_STANDARD);
+        }
         flashcardLabel.setText("<html><body style='text-align: center'>" + promptText + "</body></html>");
         answerField.setEnabled(true);
     }
