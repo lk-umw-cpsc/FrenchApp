@@ -29,7 +29,7 @@ public class VerbGroupChooserFrame extends JFrame implements WindowListener {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        scrollPane.setPreferredSize(new Dimension(400, 300));
+        scrollPane.setPreferredSize(new Dimension(500, 300));
         scrollPane.setBackground(FontsAndColors.APP_BACKGROUND);
 
         add(scrollPane);
