@@ -95,6 +95,7 @@ public class DeckUIEntry extends JPanel implements MouseListener, Comparable<Dec
 
     private void resetDueDates(ActionEvent e) {
         deck.resetDueDates();
+        deck.save();
         dueIcon.setVisible(true);
         revalidate();
     }
