@@ -72,7 +72,7 @@ public class Deck {
 
     public void resetDueDates() {
         for (FlashCard c : cards) {
-            c.setDueInDays(0);
+            c.removeDueDate();
         }
     }
 

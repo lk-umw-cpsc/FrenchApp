@@ -125,6 +125,13 @@ public class FlashCard {
     }
 
     /**
+     * Removes the due date from this flash card
+     */
+    public void removeDueDate() {
+        dueDate = null;
+    }
+
+    /**
      * Determines whether this card is due for study by checking
      * its due date and comparing it against today's date
      * @return true is this card is due for study, otherwise false
