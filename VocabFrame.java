@@ -260,6 +260,9 @@ public class VocabFrame extends JFrame implements WindowListener {
             incorrectPile.add(currentCard);
             currentCard.updateDueDate(FlashCard.ANSWER_INCORRECT);
         }
+        if (answerText.length() > CHARACTER_COUNT_CUTOFF) {
+            flashcardLabel.setFont(FONT_LONG_STRINGS);
+        }
         flashcardLabel.setText("<html><body style='text-align: center'>" 
                 + promptText + "<br><font color='" + color + "'>" + answerText + "</font><br>&nbsp;</body></html>");
 
